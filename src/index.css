@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@theme {
+  --color-chat-bg: #0b2b26;
+  --color-box-bg: #235347;
+  --breakpoint-custom1: 600px;
+}
