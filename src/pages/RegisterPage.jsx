@@ -12,7 +12,7 @@ const RegisterPage = () => {
             Email Address <span className="text-red-700">*</span>
           </label>
           <input
-            type="text"
+            type="email"
             placeholder="Email"
             className="border p-2 rounded-xl bg-white text-black w-full"
           />
