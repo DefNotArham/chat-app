@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthPages from "../Components/AuthPages";
 import axios from "axios";
+import { MdError } from "react-icons/md";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ const RegisterPage = () => {
   const [DOB, setDOB] = useState("");
 
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleCreateAccount = async () => {
     try {
@@ -24,10 +27,13 @@ const RegisterPage = () => {
         { withCredentials: true },
       );
 
-      setError(response.data.error);
+      if (response.data.success) {
+        navigate("/login");
+      }
     } catch (error) {
       console.log(error);
-      setError("Server error");
+      setError(error.response?.data?.message || "Server error");
+
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -37,6 +43,12 @@ const RegisterPage = () => {
   return (
     <AuthPages>
       <h1 className="text-2xl font-semibold">Create an account</h1>
+      {error && (
+        <p className="text-red-500 font-bold mt-3 flex items-center gap-1">
+          <MdError />
+          {error}
+        </p>
+      )}
       <div className="w-full mt-5 flex flex-col gap-5">
         <div className="flex flex-col items-start">
           <label className="ml-1 my-2">

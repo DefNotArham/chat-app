@@ -14,12 +14,20 @@ const registerController = async (req, res) => {
         message: "All fields are required",
       });
 
+    // Username errors
     if (username.includes(" "))
       return res.status(400).json({
         success: false,
-        error: "Username cannot contain spaces",
+        message: "Username cannot contain spaces",
       });
 
+    if (username.length < 3 || username.length > 20)
+      return res.status(400).json({
+        success: false,
+        message: "Username must be 3–20 characters long",
+      });
+
+    // Email errors
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
@@ -29,6 +37,67 @@ const registerController = async (req, res) => {
       });
     }
 
+    // Password errors
+    if (password.length < 8)
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters long",
+      });
+
+    if (!/\d/.test(password))
+      return res.status(400).json({
+        success: false,
+        messsage: "Password must include atleast one number",
+      });
+
+    if (!/[a-zA-Z]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must include at least one letter",
+      });
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must include at least one uppercase letter",
+      });
+    }
+
+    if (!/[!@#$%^&*]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must include a special character (!@#$%^&*)",
+      });
+    }
+
+    // DOB errors
+    const birthDate = new Date(DOB);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (birthDate.getFullYear() > today.getFullYear())
+      return res.status(400).json({
+        sucess: false,
+        message: "Invalid date of birth",
+      });
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    if (age < 13)
+      return res.status(400).json({
+        success: false,
+        message: "You must be 13 or older to register",
+      });
+
+    // User errors
     const existingUser = await User.findOne({ email });
 
     if (existingUser)
