@@ -10,7 +10,8 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [DOB, setDOB] = useState("");
 
-  const [error, setError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorType, setErrorType] = useState("");
 
   const navigate = useNavigate();
 
@@ -32,10 +33,12 @@ const RegisterPage = () => {
       }
     } catch (error) {
       console.log(error);
-      setError(error.response?.data?.message || "Server error");
+      setErrorMsg(error?.response?.data.message || "Server error");
+      setErrorType(error?.response?.data.typeError || "general");
 
       setTimeout(() => {
-        setError("");
+        setErrorMsg("");
+        setErrorType("");
       }, 3000);
     }
   };
@@ -43,12 +46,15 @@ const RegisterPage = () => {
   return (
     <AuthPages>
       <h1 className="text-2xl font-semibold">Create an account</h1>
-      {error && (
-        <p className="text-red-500 font-bold mt-3 flex items-center gap-1">
+      {errorType === "general" ? (
+        <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
           <MdError />
-          {error}
+          {errorMsg}
         </p>
+      ) : (
+        ""
       )}
+
       <div className="w-full mt-5 flex flex-col gap-5">
         <div className="flex flex-col items-start">
           <label className="ml-1 my-2">
@@ -57,10 +63,22 @@ const RegisterPage = () => {
           <input
             type="email"
             placeholder="Email"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "email" || errorType === "general"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
+          {errorType === "email" ? (
+            <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
+              <MdError />
+              {errorMsg}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="flex flex-col items-start">
@@ -70,10 +88,22 @@ const RegisterPage = () => {
           <input
             type="text"
             placeholder="Username"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "username" || errorType === "general"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
+          {errorType === "username" ? (
+            <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
+              <MdError />
+              {errorMsg}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="flex flex-col items-start">
@@ -83,10 +113,31 @@ const RegisterPage = () => {
           <input
             type="Password"
             placeholder="Password"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "password" || errorType === "general"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
+
+          {errorType === "password" ? (
+            <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
+              <MdError />
+              {errorMsg}
+            </p>
+          ) : (
+            ""
+          )}
+
+          {/* <div className="text-sm mt-3">
+            <p>* Must be at least 8 characters long </p>
+            <p>* Must include atleast one number </p>
+            <p>* Must include at least one letter </p>
+            <p>* Must include at least one uppercase letter </p>
+            <p>* Must include a special character (!@#$%^&*) </p>
+          </div> */}
         </div>
 
         <div className="flex flex-col items-start">
@@ -95,10 +146,22 @@ const RegisterPage = () => {
           </label>
           <input
             type="date"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "dob" || errorType === "general"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setDOB(e.target.value)}
             value={DOB}
           />
+          {errorType === "dob" ? (
+            <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
+              <MdError />
+              {errorMsg}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 

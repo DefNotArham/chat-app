@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { MdError } from "react-icons/md";
 
 import AuthPages from "../Components/AuthPages";
 
-const LoginPage = ({ isAuthentication, setIsAuthentication }) => {
+const LoginPage = ({ setIsAuthentication, setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorType, setErrorType] = useState("");
 
   const navigate = useNavigate();
 
@@ -25,16 +27,20 @@ const LoginPage = ({ isAuthentication, setIsAuthentication }) => {
 
       if (response.data.success) {
         navigate("/");
+        setUser(response.data.user);
         setIsAuthentication(true);
       } else {
+        setUser(null);
         setIsAuthentication(false);
       }
     } catch (error) {
       console.log(error);
-      setError(error?.response?.data.message || "Server error");
+      setErrorMsg(error?.response?.data.message || "Server error");
+      setErrorType(error?.response?.data.typeError || "general");
 
       setTimeout(() => {
-        setError("");
+        setErrorMsg("");
+        setErrorType("");
       }, 3000);
     }
   };
@@ -44,6 +50,13 @@ const LoginPage = ({ isAuthentication, setIsAuthentication }) => {
       <div>
         <h1 className="text-2xl font-semibold">Welcome back!</h1>
         <p>We are happy to see again!</p>
+
+        {errorType === "general" && (
+          <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
+            <MdError />
+            {errorMsg}
+          </p>
+        )}
       </div>
       <div className="w-full mt-5 flex flex-col gap-5">
         <div className="flex flex-col items-start">
@@ -53,7 +66,11 @@ const LoginPage = ({ isAuthentication, setIsAuthentication }) => {
           <input
             type="text"
             placeholder="Email"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "general" || errorType === "email"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
@@ -66,7 +83,11 @@ const LoginPage = ({ isAuthentication, setIsAuthentication }) => {
           <input
             type="Password"
             placeholder="Password"
-            className="border p-2 rounded-xl bg-white text-black w-full"
+            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+              errorType === "general" || errorType === "password"
+                ? "border-red-500 border-2 "
+                : "border-2 border-white"
+            }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />

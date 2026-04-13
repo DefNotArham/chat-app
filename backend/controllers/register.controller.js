@@ -12,6 +12,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
+        typeError: "general",
       });
 
     // Username errors
@@ -19,12 +20,14 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Username cannot contain spaces",
+        typeError: "username",
       });
 
     if (username.length < 3 || username.length > 20)
       return res.status(400).json({
         success: false,
         message: "Username must be 3–20 characters long",
+        typeError: "username",
       });
 
     // Email errors
@@ -34,6 +37,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Invalid email format",
+        typeError: "email",
       });
     }
 
@@ -42,18 +46,21 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Password must be at least 8 characters long",
+        typeError: "password",
       });
 
     if (!/\d/.test(password))
       return res.status(400).json({
         success: false,
         messsage: "Password must include atleast one number",
+        typeError: "password",
       });
 
     if (!/[a-zA-Z]/.test(password)) {
       return res.status(400).json({
         success: false,
         message: "Password must include at least one letter",
+        typeError: "password",
       });
     }
 
@@ -61,6 +68,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Password must include at least one uppercase letter",
+        typeError: "password",
       });
     }
 
@@ -68,6 +76,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Password must include a special character (!@#$%^&*)",
+        typeError: "password",
       });
     }
 
@@ -82,6 +91,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         sucess: false,
         message: "Invalid date of birth",
+        typeError: "dob",
       });
 
     if (
@@ -95,6 +105,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "You must be 13 or older to register",
+        typeError: "dob",
       });
 
     // User errors
@@ -104,6 +115,7 @@ const registerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "User already exists",
+        typeError: "User",
       });
 
     const existUsername = await User.findOne({ username });
@@ -112,6 +124,7 @@ const registerController = async (req, res) => {
         success: false,
         message:
           "Username is unavailable. Try adding numbers, letters, underscores _ , or periods.",
+        typeError: "username",
       });
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -139,6 +152,7 @@ const registerController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
+      typeError: "general",
     });
   }
 };

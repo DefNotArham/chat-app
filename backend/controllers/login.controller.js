@@ -7,17 +7,33 @@ const loginController = async (req, res) => {
   try {
     email = email?.trim().toLowerCase();
 
-    if (!email || !password)
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
+    if (!email && !password)
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+        typeError: "general",
+      });
 
+    if (!email)
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+        typeError: "email",
+      });
+
+    if (!password)
+      return res.status(400).json({
+        success: false,
+        message: "Password is required",
+        typeError: "password",
+      });
     const existingUser = await User.findOne({ email });
 
     if (!existingUser)
       return res.status(400).json({
         success: false,
         message: "Invalid credentials",
+        typeError: "general",
       });
 
     const matchPassword = await bcrypt.compare(password, existingUser.password);
@@ -26,6 +42,7 @@ const loginController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Invalid credentials",
+        typeError: "general",
       });
 
     generateTokenAndSetCookie(res, existingUser._id);
@@ -43,6 +60,7 @@ const loginController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
+      typeError: "general",
     });
   }
 };

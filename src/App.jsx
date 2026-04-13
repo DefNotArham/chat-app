@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   const [isAuthentication, setIsAuthentication] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -19,12 +20,15 @@ const App = () => {
 
         if (response.data.success) {
           setIsAuthentication(true);
+          setUser(response?.data.user);
         } else {
           setIsAuthentication(false);
+          setUser(null);
         }
       } catch (error) {
         console.log(error);
         setIsAuthentication(false);
+        setUser(null);
       }
     };
 
@@ -53,7 +57,13 @@ const App = () => {
         path="/"
         element={
           <ProtectedRoutes>
-            <h1>{isAuthentication ? "Logged in" : "not logged in"}</h1>
+            <h1>
+              {isAuthentication
+                ? `Logged in
+            email: ${user?.email}
+            `
+                : "not logged in"}
+            </h1>
           </ProtectedRoutes>
         }
       />
@@ -70,8 +80,8 @@ const App = () => {
         element={
           <RedirectAuthenticatedUser>
             <LoginPage
-              isAuthentication={isAuthentication}
               setIsAuthentication={setIsAuthentication}
+              setUser={setUser}
             />
           </RedirectAuthenticatedUser>
         }
