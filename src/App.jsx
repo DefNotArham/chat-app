@@ -4,6 +4,7 @@ import axios from "axios";
 
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import Homepage from "./pages/Homepage";
 
 const App = () => {
   const [isAuthentication, setIsAuthentication] = useState(false);
@@ -57,13 +58,7 @@ const App = () => {
         path="/"
         element={
           <ProtectedRoutes>
-            <h1>
-              {isAuthentication
-                ? `Logged in
-            email: ${user?.email}
-            `
-                : "not logged in"}
-            </h1>
+            <Homepage user={user} />
           </ProtectedRoutes>
         }
       />
