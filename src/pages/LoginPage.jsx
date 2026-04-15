@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdError } from "react-icons/md";
 import { IoCloseSharp } from "react-icons/io5";
+import { Oval } from "react-loader-spinner";
 
 import AuthPages from "../Components/AuthPages";
 
@@ -15,9 +16,12 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
 
   const [forgotPassSucess, setForgotPassSuccess] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/login",
@@ -32,11 +36,13 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
         navigate("/");
         setUser(response.data.user);
         setIsAuthentication(true);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
       setErrorMsg(error?.response?.data.message || "Server error");
       setErrorType(error?.response?.data.typeError || "general");
+      setIsLoading(false);
 
       setTimeout(() => {
         setErrorMsg("");
@@ -46,6 +52,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
   };
 
   const handleForgotPassword = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/forgot-password",
@@ -55,12 +62,14 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
 
       if (response.data.success) {
         setForgotPassSuccess(true);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
       setErrorMsg(error.response.data.message);
       setErrorType("email");
       setForgotPassSuccess(false);
+      setIsLoading(false);
 
       setTimeout(() => {
         setErrorMsg("");
@@ -77,7 +86,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
 
   return (
     <AuthPages>
-      <div>
+      <div className="flex flex-col text-center">
         <h1 className="text-2xl font-semibold">Welcome back!</h1>
         <p>We are happy to see again!</p>
 
@@ -88,7 +97,13 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
           </p>
         )}
       </div>
-      <div className="w-full mt-5 flex flex-col gap-5">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+        className="w-full mt-5 flex flex-col gap-5"
+      >
         <div className="flex flex-col items-start">
           <label className="ml-1 my-2">
             Email Address <span className="text-red-700">*</span>
@@ -103,7 +118,6 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            onKeyDown={handleEnter}
           />
           {errorType === "email" && (
             <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
@@ -124,7 +138,6 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            onKeyDown={handleEnter}
           />
           {errorType === "password" && (
             <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
@@ -140,9 +153,23 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
         <div className="w-full mt-7 flex flex-col items-center text-center">
           <button
             onClick={handleLogin}
-            className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer"
+            className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer flex justify-center"
+            disabled={isLoading}
           >
-            Log in
+            {isLoading ? (
+              <Oval
+                height={26}
+                width={26}
+                color="#ffff"
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="#ffff"
+                strokeWidth={7}
+                strokeWidthSecondary={5}
+              />
+            ) : (
+              "Log in"
+            )}
           </button>
           <p className="mt-3 text-[#E8FFF1]">
             Need an account?{" "}
@@ -151,7 +178,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             </Link>
           </p>
         </div>
-      </div>
+      </form>
 
       {forgotPassSucess && (
         <>

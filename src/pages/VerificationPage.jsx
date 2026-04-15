@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthPages from "../Components/AuthPages";
 import axios from "axios";
+import { Oval } from "react-loader-spinner";
 
 const VerificationPage = ({ user, setUser }) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleVerify = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/verifyEmail",
@@ -18,10 +22,12 @@ const VerificationPage = ({ user, setUser }) => {
 
       if (response.data.success) {
         setSuccess("Verified successfully!");
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
       setError(error?.response?.data?.message || "Verification failed");
+      setIsLoading(false);
 
       setTimeout(() => {
         setError("");
@@ -75,9 +81,23 @@ const VerificationPage = ({ user, setUser }) => {
               />
               <button
                 onClick={handleVerify}
+                disabled={isLoading}
                 className="p-3 font-semibold cursor-pointer text-sm rounded-xl mx-auto mt-3 w-full bg-emerald-700 "
               >
-                Verify
+                {isLoading ? (
+                  <Oval
+                    height={26}
+                    width={26}
+                    color="#ffff"
+                    visible={true}
+                    ariaLabel="oval-loading"
+                    secondaryColor="#ffff"
+                    strokeWidth={7}
+                    strokeWidthSecondary={5}
+                  />
+                ) : (
+                  "Verify"
+                )}
               </button>
             </>
           )}

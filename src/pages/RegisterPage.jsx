@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthPages from "../Components/AuthPages";
 import axios from "axios";
 import { MdError } from "react-icons/md";
+import { Oval } from "react-loader-spinner";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -13,9 +14,12 @@ const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [errorType, setErrorType] = useState("");
 
+  const [isLoading, setIsloading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleCreateAccount = async () => {
+    setIsloading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/register",
@@ -30,11 +34,13 @@ const RegisterPage = () => {
 
       if (response.data.success) {
         navigate("/verify-email");
+        setIsloading(false);
       }
     } catch (error) {
       console.log(error);
       setErrorMsg(error?.response?.data.message || "Server error");
       setErrorType(error?.response?.data.typeError || "general");
+      setIsloading(false);
 
       setTimeout(() => {
         setErrorMsg("");
@@ -88,7 +94,13 @@ const RegisterPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col items-start">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+          className="flex flex-col items-start"
+        >
           <label className="ml-1 my-2">
             Username <span className="text-red-700">*</span>
           </label>
@@ -102,7 +114,6 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setUsername(e.target.value)}
             value={username}
-            onKeyDown={handleEnter}
           />
           {errorType === "username" ? (
             <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
@@ -112,7 +123,7 @@ const RegisterPage = () => {
           ) : (
             ""
           )}
-        </div>
+        </form>
 
         <div className="flex flex-col items-start">
           <label className="ml-1 my-2">
@@ -128,7 +139,6 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            onKeyDown={handleEnter}
           />
 
           {errorType === "password" ? (
@@ -162,7 +172,6 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setDOB(e.target.value)}
             value={DOB}
-            onKeyDown={handleEnter}
           />
           {errorType === "dob" ? (
             <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
@@ -179,8 +188,22 @@ const RegisterPage = () => {
         <button
           className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer"
           onClick={handleCreateAccount}
+          disabled={isLoading}
         >
-          Create account
+          {isLoading ? (
+            <Oval
+              height={26}
+              width={26}
+              color="#ffff"
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#ffff"
+              strokeWidth={7}
+              strokeWidthSecondary={5}
+            />
+          ) : (
+            "Create account"
+          )}
         </button>
         <p className="mt-3 text-[#E8FFF1]">
           Already have an account?{" "}

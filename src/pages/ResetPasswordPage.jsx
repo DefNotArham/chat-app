@@ -3,6 +3,7 @@ import AuthPages from "../Components/AuthPages";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
 
 const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -13,9 +14,14 @@ const ResetPasswordPage = () => {
 
   const { token } = useParams();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleResetPassword = async () => {
+    setIsLoading(true);
     if (newPassword !== confirmNewPassword) {
       setError("Password does not match");
+      setIsLoading(false);
+
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -24,6 +30,8 @@ const ResetPasswordPage = () => {
 
     if (!newPassword || !confirmNewPassword) {
       setError("All fields are required");
+      setIsLoading(false);
+
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -31,6 +39,8 @@ const ResetPasswordPage = () => {
     }
 
     try {
+      setIsLoading(true);
+
       const response = await axios.post(
         `http://localhost:8000/auth/reset-password/${token}`,
         { password: newPassword },
@@ -40,10 +50,11 @@ const ResetPasswordPage = () => {
       if (response.data.success) {
         setSuccess("Password changed successfully");
         setError("");
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
-
+      setIsLoading(false);
       setError(error?.response?.data?.message || "Server error");
 
       setTimeout(() => {
@@ -99,9 +110,23 @@ const ResetPasswordPage = () => {
           </div>
           <button
             onClick={handleResetPassword}
+            disabled={isLoading}
             className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer mt-3"
           >
-            Reset password
+            {isLoading ? (
+              <Oval
+                height={26}
+                width={26}
+                color="#ffff"
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="#ffff"
+                strokeWidth={7}
+                strokeWidthSecondary={5}
+              />
+            ) : (
+              "Reset Password"
+            )}
           </button>
         </>
       ) : (

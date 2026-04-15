@@ -3,5 +3,6 @@
 @theme {
   --color-chat-bg: #0b2b26;
   --color-box-bg: #235347;
+  --color-side-bar: #111817;
   --breakpoint-custom1: 600px;
 }
