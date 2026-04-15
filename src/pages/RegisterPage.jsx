@@ -43,6 +43,12 @@ const RegisterPage = () => {
     }
   };
 
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleCreateAccount();
+    }
+  };
+
   return (
     <AuthPages>
       <h1 className="text-2xl font-semibold">Create an account</h1>
@@ -70,6 +76,7 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            onKeyDown={handleEnter}
           />
           {errorType === "email" ? (
             <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
@@ -95,6 +102,7 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setUsername(e.target.value)}
             value={username}
+            onKeyDown={handleEnter}
           />
           {errorType === "username" ? (
             <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">
@@ -120,6 +128,7 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
+            onKeyDown={handleEnter}
           />
 
           {errorType === "password" ? (
@@ -153,6 +162,7 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setDOB(e.target.value)}
             value={DOB}
+            onKeyDown={handleEnter}
           />
           {errorType === "dob" ? (
             <p className="text-red-500 text-xs mt-2 ml-2 font-bold flex items-center gap-1">

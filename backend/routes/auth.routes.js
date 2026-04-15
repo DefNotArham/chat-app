@@ -7,6 +7,7 @@ import checkAuthController from "../controllers/checkAuth.controller.js";
 import logoutController from "../controllers/logout.controller.js";
 import verifyUserController from "../controllers/verifyUser.controller.js";
 import forgotPasswordController from "../controllers/forgotPassword.controller.js";
+import resetPasswordController from "../controllers/resetPassword.controller.js";
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.post("/checkAuth", verifyToken, checkAuthController);
 router.post("/logout", logoutController);
 router.post("/verifyEmail", verifyUserController);
 router.post("/forgot-password", forgotPasswordController);
+router.post("/reset-password/:token", resetPasswordController);
 
 export default router;

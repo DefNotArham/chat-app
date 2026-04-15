@@ -69,6 +69,12 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
     }
   };
 
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <AuthPages>
       <div>
@@ -97,6 +103,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            onKeyDown={handleEnter}
           />
           {errorType === "email" && (
             <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
@@ -117,7 +124,11 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
+            onKeyDown={handleEnter}
           />
+          {errorType === "password" && (
+            <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
+          )}
           <a
             onClick={handleForgotPassword}
             className="mt-2 ml-1 underline text-sm text-[#E8FFF1] cursor-pointer"

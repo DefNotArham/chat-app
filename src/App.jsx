@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Homepage from "./pages/Homepage";
 import VerificationPage from "./pages/VerificationPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const App = () => {
   const [isAuthentication, setIsAuthentication] = useState(false);
@@ -96,6 +97,15 @@ const App = () => {
               isAuthentication={isAuthentication}
               setIsAuthentication={setIsAuthentication}
             />
+          </RedirectAuthenticatedUser>
+        }
+      />
+
+      <Route
+        path="/reset-password/:token"
+        element={
+          <RedirectAuthenticatedUser>
+            <ResetPasswordPage />
           </RedirectAuthenticatedUser>
         }
       />
