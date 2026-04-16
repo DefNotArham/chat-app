@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+
+// Icons
 import { FiPlus } from "react-icons/fi";
 import { MdOutlineSearch } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { MdDoNotDisturbOn } from "react-icons/md";
 import { FaCircle } from "react-icons/fa6";
 import { FaMoon } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Sidebar = ({ user }) => {
+  const [isHovering, setIsHovering] = useState(false);
+  const [toggleProfileBox, setToggleProfileBox] = useState(false);
+
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!profileRef.current.contains(e.target)) {
+        setToggleProfileBox(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
   return (
     <div className="flex ">
       <div className="bg-side-bar w-[70px] h-screen fixed top-0 left-0 flex flex-col items-center py-6 gap-6 z-50">
@@ -37,10 +61,21 @@ const Sidebar = ({ user }) => {
         </div>
       </div>
 
-      <div className="bg-[#103f38] w-84 h-[60px] flex items-center absolute bottom-3 z-[999] left-2 rounded-2xl px-1 justify-between">
-        <div className="flex gap-3 items-center hover:bg-[#007453] cursor-pointer rounded-xl px-3 py-1 transition-all w-50">
+      <div
+        className="bg-[#103f38] w-84 h-[60px] flex items-center absolute bottom-3 z-[999] left-2 rounded-2xl px-1 justify-between"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <div
+          className="flex gap-3 items-center hover:bg-[#007453] cursor-pointer rounded-xl px-3 py-1 transition-all w-50"
+          onClick={() => setToggleProfileBox(!toggleProfileBox)}
+        >
           <div className="w-6 rounded-2xl relative">
-            <img src="./white_logo.png" alt="" />
+            <img
+              src="./white_logo.png"
+              alt=""
+              className="w-full h-full object-cover"
+            />
             {user.status === "Online" ? (
               <FaCircle
                 color="green"
@@ -59,12 +94,40 @@ const Sidebar = ({ user }) => {
                 size={10}
                 className="absolute bottom-[-1px] right-[-3px] "
               />
+            ) : user.status === "Invisible" ? (
+              <FaCircle
+                color="gray"
+                size={10}
+                className="absolute bottom-[-1px] right-[-3px] "
+              />
+            ) : user.status === "Offline" ? (
+              <FaCircle
+                color="gray"
+                size={10}
+                className="absolute bottom-[-1px] right-[-3px] "
+              />
             ) : null}
           </div>
 
           <div className="">
             <h1 className="text-white">{user.displayName}</h1>
-            <p className="text-xs text-gray-400">{user.status}</p>
+            <p className="text-xs text-gray-400 relative h-4">
+              <span
+                className={`absolute transition-opacity duration-300 ${
+                  isHovering ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {user.status}
+              </span>
+
+              <span
+                className={`absolute transition-opacity duration-300 ${
+                  isHovering ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {user.username}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -80,6 +143,57 @@ const Sidebar = ({ user }) => {
           </div>
         </div>
       </div>
+
+      {toggleProfileBox ? (
+        <div
+          className="absolute bottom-20 left-4 z-[999] w-72 rounded-2xl bg-[#103f38] border border-[#2d2d2d] shadow-xl overflow-hidden"
+          ref={profileRef}
+        >
+          <div className="h-16 bg-[#007453]" />
+
+          <div className="px-4 pb-4 -mt-8 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-2xl border-4 border-[#103f38] overflow-hidden bg-black">
+              <img
+                className="w-full h-full object-cover"
+                src="/white_logo.png"
+                alt="avatar"
+              />
+            </div>
+
+            <h1 className="text-white text-lg font-semibold mt-2">
+              {user.displayName}
+            </h1>
+
+            <p className="text-gray-400 text-sm cursor-pointer">
+              @{user.username}
+            </p>
+          </div>
+
+          <div className="px-3 pb-4 flex flex-col gap-2">
+            <button className="w-full bg-[#1a4f44] hover:bg-[#007453] transition-all text-white py-2 rounded-xl text-sm cursor-pointer flex justify-center items-center gap-2">
+              <MdEdit />
+              Edit Profile
+            </button>
+
+            <button className="w-full bg-[#1a4f44] hover:bg-[#007453] transition-all text-white py-2 rounded-xl text-sm cursor-pointer flex items-center gap-2 justify-center px-5">
+              {user.status === "Online" ? (
+                <FaCircle color="green" size={10} className=" " />
+              ) : user.status === "Idle" ? (
+                <FaMoon color="yellow" size={10} className=" " />
+              ) : user.status === "Invisible" ? (
+                <FaMoon color="gray" size={10} className=" " />
+              ) : user.status === "Offline" ? (
+                <FaMoon color="gray" size={10} className=" " />
+              ) : null}{" "}
+              Change Status
+            </button>
+            <button className="w-full bg-[#1a4f44] hover:bg-[#007453] transition-all text-white py-2 rounded-xl text-sm cursor-pointer flex justify-center items-center gap-2">
+              <FaRegUserCircle />
+              Copy User Id
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="bg-side-bar w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col justify-between z-40">
         <div className="w-[1px] bg-[#424644] min-h-screen"></div>
