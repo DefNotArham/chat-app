@@ -31,7 +31,7 @@ const changeUsernameController = async (req, res) => {
         typeError: "username",
       });
 
-    const existUsername = await User.findOne({ username });
+    const existUsername = await User.findOne({ username: newUsername });
     if (existUsername)
       return res.status(400).json({
         success: false,

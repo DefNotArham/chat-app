@@ -31,7 +31,7 @@ const Sidebar = ({ setUser, user }) => {
 
   const handleChangeStatus = async (newStatus) => {
     try {
-      await axios.post(
+      await axios.patch(
         "http://localhost:8000/user/change-status",
         { status: newStatus },
         { withCredentials: true },

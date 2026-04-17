@@ -6,8 +6,8 @@ import changeUsernameController from "../controllers/changeUsername.controller.j
 
 const router = express.Router();
 
-router.post("/change-status", verifyToken, changeStatusController);
-router.post("/change-displayName", verifyToken, editDisplayNameController);
-router.post("/change-username", verifyToken, changeUsernameController);
+router.patch("/change-status", verifyToken, changeStatusController);
+router.patch("/change-displayName", verifyToken, editDisplayNameController);
+router.patch("/change-username", verifyToken, changeUsernameController);
 
 export default router;
