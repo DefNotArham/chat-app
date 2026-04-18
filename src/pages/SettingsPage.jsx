@@ -25,11 +25,16 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
   const [isLoading1, setIsLoading1] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
   const [isLoading3, setIsLoading3] = useState(false);
+  const [isLoading4, setIsLoading4] = useState(false);
+  const [isLoading5, setIsLoading5] = useState(false);
 
   const [changePass, setChangePass] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setNewConfirmPassword] = useState("");
+
+  const [deleteAccPassword, setDeleteAccPassword] = useState("");
+  const [deleteAccount, setDeleteAccount] = useState(false);
 
   const handleEditDisplay = async () => {
     if (editDisplayName) {
@@ -176,6 +181,7 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
   };
 
   const handleLogout = async () => {
+    setIsLoading4(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/logout",
@@ -187,9 +193,49 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
         setUser(null);
         setIsAuthentication(false);
         navigate("/login");
+        setIsLoading4(false);
       }
     } catch (error) {
       console.log(error);
+      setError(error?.response?.data.message);
+      setErrorType("logout");
+
+      setIsLoading4(false);
+
+      setTimeout(() => {
+        setError("");
+        setErrorType("");
+      }, 3000);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setIsLoading5(true);
+      const response = await axios.delete(
+        "http://localhost:8000/user/delete-account",
+        {
+          data: { password: deleteAccPassword },
+          withCredentials: true,
+        },
+      );
+
+      if (response.data.success) {
+        setIsLoading5(false);
+        setDeleteAccount(false);
+        setIsAuthentication(false);
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data.message);
+      setErrorType("deleteaccount");
+      setIsLoading5(false);
+
+      setTimeout(() => {
+        setError("");
+        setErrorType("");
+      }, 3000);
     }
   };
 
@@ -340,20 +386,25 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
               </span>
             </button>
 
-            <div
-              className="bg-[#0f3f36] hover:bg-[#124f45] transition p-4 rounded-2xl flex justify-between items-center cursor-pointer"
+            <button
+              className="bg-[#0f3f36] hover:bg-[#124f45] transition p-4 rounded-2xl flex justify-between items-center cursor-pointer w-full"
               onClick={() => handleLogout()}
             >
               <span className="font-medium">Log out</span>
               <span className="text-gray-400">
                 <MdArrowOutward />
               </span>
-            </div>
+            </button>
 
-            <div className="bg-[#2a0f14] hover:bg-red-950 transition p-4 rounded-2xl flex justify-between items-center cursor-pointer">
+            <button
+              onClick={() => {
+                setDeleteAccount(true);
+              }}
+              className="bg-[#2a0f14] hover:bg-red-950 transition p-4 rounded-2xl flex justify-between items-center cursor-pointer w-full"
+            >
               <span className="font-medium text-red-400">Delete Account</span>
               <span className="text-red-400">⚠</span>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -399,7 +450,7 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
                     type="password"
                     placeholder="Confirm password"
                     className={`px-4 py-2 border rounded-lg outline-none w-full ${
-                      error && errorType ? "border-red-500" : ""
+                      error && errorType === "password" ? "border-red-500" : ""
                     } `}
                     onChange={(e) => setNewConfirmPassword(e.target.value)}
                     value={confirmNewPassword}
@@ -419,6 +470,54 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
                   className="bg-[#116852] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer"
                 >
                   Done
+                </button>
+              </div>
+            </div>
+          </>
+        ) : null}
+
+        {deleteAccount ? (
+          <>
+            <div
+              className="fixed inset-0 bg-black/50"
+              onClick={() => setDeleteAccount(false)}
+            ></div>
+            <div className="fixed bg-[#480101] flex flex-col gap-3 p-10 rounded-2xl w-[33%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  ">
+              <div className="w-full flex flex-col gap-3">
+                <h2 className="text-xl font-semibold text-white-800">
+                  Delete Account
+                </h2>
+                {error && errorType === "deleteaccount" ? (
+                  <p className="font-semibold text-red-500">{error}</p>
+                ) : (
+                  ""
+                )}
+
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={`px-4 py-2 border rounded-lg outline-none w-full ${
+                    error && errorType === "deleteaccount"
+                      ? "border-red-500"
+                      : ""
+                  } `}
+                  onChange={(e) => setDeleteAccPassword(e.target.value)}
+                  value={deleteAccPassword}
+                />
+              </div>
+
+              <div className="flex justify-between gap-5 mt-5">
+                <button
+                  onClick={() => setDeleteAccount(false)}
+                  className="bg-[#6e6e6e] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDeleteAccount()}
+                  className="bg-[#a50303] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer"
+                >
+                  Delete
                 </button>
               </div>
             </div>
