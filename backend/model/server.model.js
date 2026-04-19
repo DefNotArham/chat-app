@@ -15,14 +15,6 @@ const serverSchema = mongoose.Schema({
     },
   ],
   inviteCode: { type: mongoose.Schema.Types.ObjectId, unique: true },
-  channels: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "channel",
-    },
-  ],
-  isPublic: { type: Boolean, default: true },
 });
 
 const Server = mongoose.model("server", serverSchema);

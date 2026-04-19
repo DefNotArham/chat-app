@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import connectDb from "./db/connectDb.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import serverRoutes from "./routes/server.routes.js";
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/server", serverRoutes);
 
 connectDb();
 app.listen(PORT, () => {
