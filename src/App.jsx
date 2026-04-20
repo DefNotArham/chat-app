@@ -4,10 +4,11 @@ import axios from "axios";
 
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import Homepage from "./pages/Homepage";
+import DirectMessagePage from "./pages/DirectMessagePage";
 import VerificationPage from "./pages/VerificationPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SettingsPage from "./pages/SettingsPage";
+import ServerPage from "./pages/ServerPage";
 
 const App = () => {
   const [isAuthentication, setIsAuthentication] = useState(false);
@@ -66,7 +67,7 @@ const App = () => {
         path="/"
         element={
           <ProtectedRoutes>
-            <Homepage
+            <DirectMessagePage
               user={user}
               setUser={setUser}
               setIsAuthentication={setIsAuthentication}
@@ -84,6 +85,15 @@ const App = () => {
               setUser={setUser}
               setIsAuthentication={setIsAuthentication}
             />
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/server/:serverId"
+        element={
+          <ProtectedRoutes>
+            <ServerPage user={user} setUser={setUser} />
           </ProtectedRoutes>
         }
       />

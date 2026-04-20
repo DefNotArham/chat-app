@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Icons
 import { FiPlus } from "react-icons/fi";
@@ -33,6 +33,8 @@ const Sidebar = ({ setUser, user }) => {
   const [joinServerPopup, setJoinServerPopup] = useState(false);
 
   const [serverName, setServerName] = useState("");
+
+  const navigate = useNavigate();
 
   const loadServers = async () => {
     try {
@@ -76,7 +78,7 @@ const Sidebar = ({ setUser, user }) => {
 
   useEffect(() => {
     let handler = (e) => {
-      if (!profileRef.current.contains(e.target)) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
         setToggleProfileBox(false);
       }
     };
@@ -92,7 +94,7 @@ const Sidebar = ({ setUser, user }) => {
 
   useEffect(() => {
     let handler = (e) => {
-      if (!statusRef.current.contains(e.target)) {
+      if (statusRef.current && !statusRef.current.contains(e.target)) {
         setShowStatusMenu(false);
       }
     };
@@ -108,7 +110,10 @@ const Sidebar = ({ setUser, user }) => {
 
   useEffect(() => {
     let handler = (e) => {
-      if (!serverPopUpRef.current.contains(e.target)) {
+      if (
+        serverPopUpRef.current &&
+        !serverPopUpRef.current.contains(e.target)
+      ) {
         setServerPopup(false);
       }
     };
@@ -147,7 +152,10 @@ const Sidebar = ({ setUser, user }) => {
   return (
     <div className="flex ">
       <div className="bg-side-bar w-[70px] h-screen fixed top-0 left-0 flex flex-col items-center py-6 gap-6 z-50">
-        <div className=" bg-[#43B581] flex items-center justify-center p-2 rounded-2xl cursor-pointer group relative">
+        <div
+          className=" bg-[#43B581] flex items-center justify-center p-2 rounded-2xl cursor-pointer group relative"
+          onClick={() => navigate("/")}
+        >
           <img className="w-6" src="/white_logo.png" alt="logo" />
 
           <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
@@ -159,7 +167,12 @@ const Sidebar = ({ setUser, user }) => {
 
         <div className="flex flex-col gap-4 mt-[1px]">
           {user.servers.map((s) => (
-            <div className="bg-[#007453] p-2 rounded-2xl cursor-pointer group relative flex items-center justify-center">
+            <div
+              className="bg-[#007453] p-2 rounded-2xl cursor-pointer group relative flex items-center justify-center"
+              onClick={() => {
+                navigate(`/server/${s._id}`);
+              }}
+            >
               <div className="text-white w-6 flex items-center justify-center text-center">
                 {getServerInitials(s.name)}
               </div>
@@ -320,7 +333,7 @@ const Sidebar = ({ setUser, user }) => {
         >
           <div className="w-6 rounded-2xl relative">
             <img
-              src="./white_logo.png"
+              src="/white_logo.png"
               alt=""
               className="w-full h-full object-cover"
             />
@@ -523,9 +536,9 @@ const Sidebar = ({ setUser, user }) => {
         </div>
       ) : null}
 
-      <div className="bg-side-bar w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col justify-between z-40">
+      {/* <div className="bg-side-bar w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col justify-between z-40">
         <div className="w-[1px] bg-[#424644] min-h-screen"></div>
-      </div>
+      </div> */}
     </div>
   );
 };
