@@ -5,7 +5,7 @@ import generateInviteCode from "../../utils/generateInviteCode.js";
 
 const createServerController = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name } = req.body;
     const user = await User.findById(req.userId);
 
     if (!user)

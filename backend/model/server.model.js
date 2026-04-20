@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
-const serverSchema = mongoose.Schema({
+const serverSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     trim: true,
   },
-  description: { type: String },
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "user" },
   members: [
     {
@@ -15,6 +14,7 @@ const serverSchema = mongoose.Schema({
     },
   ],
   inviteCode: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  image: { type: String, default: "" },
 });
 
 const Server = mongoose.model("server", serverSchema);

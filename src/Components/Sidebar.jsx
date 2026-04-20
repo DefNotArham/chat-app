@@ -25,6 +25,15 @@ const Sidebar = ({ setUser, user }) => {
   const profileRef = useRef(null);
   const statusRef = useRef(null);
 
+  const [error, setError] = useState("");
+  const [errorType, setErrorType] = useState("");
+
+  const [serverPopup, setServerPopup] = useState(false);
+  const [createServerPopup, setCreateServerPopup] = useState(false);
+  const [joinServerPopup, setJoinServerPopup] = useState(false);
+
+  const [serverImage, setServerImage] = useState(null);
+
   useEffect(() => {
     setStatus(user.status);
   }, [user]);
@@ -75,6 +84,24 @@ const Sidebar = ({ setUser, user }) => {
     };
   });
 
+  const handleCreateServer = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/server/create-server",
+        {},
+      );
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data.message);
+      setErrorType("server");
+
+      setTimeout(() => {
+        setError("");
+        setErrorType("");
+      }, 3000);
+    }
+  };
+
   return (
     <div className="flex ">
       <div className="bg-side-bar w-[70px] h-screen fixed top-0 left-0 flex flex-col items-center py-6 gap-6 z-50">
@@ -89,7 +116,12 @@ const Sidebar = ({ setUser, user }) => {
         <div className="w-12 h-[1px] bg-[#424644]"></div>
 
         <div className="flex flex-col gap-4 mt-[1px]">
-          <div className="bg-[#43B581] p-2 rounded-2xl cursor-pointer group relative">
+          <div
+            className="bg-[#43B581] p-2 rounded-2xl cursor-pointer group relative"
+            onClick={() => {
+              setServerPopup(true);
+            }}
+          >
             <FiPlus size={24} color="white" />
             <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
               Create server
@@ -104,6 +136,112 @@ const Sidebar = ({ setUser, user }) => {
           </div>
         </div>
       </div>
+
+      {serverPopup && (
+        <div className="fixed inset-0 bg-black/50 z-[1000] flex justify-center items-center">
+          <div className="bg-[#103f38] p-5 rounded-2xl flex flex-col text-white w-[30%] gap-5 h-46 items-center justify-center">
+            <button
+              className="w-full bg-emerald-600 h-10 rounded-2xl cursor-pointer"
+              onClick={() => {
+                setServerPopup(false);
+                setCreateServerPopup(true);
+              }}
+            >
+              Create a server
+            </button>
+            <button
+              className="w-full bg-emerald-600 h-10 rounded-2xl cursor-pointer"
+              onClick={() => {
+                setServerPopup(false);
+                setJoinServerPopup(true);
+              }}
+            >
+              Join a server
+            </button>
+          </div>
+        </div>
+      )}
+
+      {createServerPopup && (
+        <div className="fixed inset-0 bg-black/50 z-[1000] flex justify-center items-center">
+          <div className="bg-[#103f38] p-5 rounded-2xl flex flex-col text-white w-[30%] justify-center text-center ">
+            <h1 className="text-2xl font-semibold mb-4">
+              Creare your own server
+            </h1>
+
+            <div className="flex flex-col items-center gap-2 mb-4">
+              <label className="cursor-pointer bg-gray-300 text-black px-4 py-2 rounded-lg text-sm font-semibold">
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    setServerImage(e.target.files[0]);
+                  }}
+                />
+              </label>
+
+              {serverImage && (
+                <img
+                  className="w-16 h-16 rounded-full object-cover"
+                  src={URL.createObjectURL(serverImage)}
+                />
+              )}
+            </div>
+
+            <div className="text-start flex flex-col gap-1">
+              <label className="">
+                Server name <span className="text-red-500">*</span>
+              </label>
+              <input className="w-full bg-gray-300 h-10 rounded-lg px-2 text-black" />
+            </div>
+            <div className="flex justify-between mt-3">
+              <button
+                className="bg-emerald-500 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"
+                onClick={() => {
+                  setCreateServerPopup(false);
+                }}
+              >
+                Back
+              </button>
+              <button className="bg-emerald-500 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer">
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {joinServerPopup ? (
+        <>
+          <div className="fixed inset-0 bg-black/50 z-[1000] flex justify-center items-center">
+            <div className="bg-[#103f38] p-5 rounded-2xl flex flex-col text-white w-[30%] justify-center text-center ">
+              <h1 className="text-2xl font-semibold mb-4">Join a server</h1>
+
+              <div className="text-start flex flex-col gap-1">
+                <label className="">
+                  Invite code <span className="text-red-500">*</span>
+                </label>
+                <input className="w-full bg-gray-300 h-10 rounded-lg px-2 text-black" />
+              </div>
+              <div className="flex justify-between mt-3">
+                <button
+                  className="bg-emerald-500 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"
+                  onClick={() => {
+                    setJoinServerPopup(false);
+                  }}
+                >
+                  Back
+                </button>
+                <button className="bg-emerald-500 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer">
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
 
       <div
         className="bg-[#103f38] w-84 h-[60px] flex items-center absolute bottom-3 z-[999] left-2 rounded-2xl px-1 justify-between"
