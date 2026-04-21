@@ -184,7 +184,7 @@ const Sidebar = ({ setUser, user }) => {
         >
           <img className="w-6" src="/white_logo.png" alt="logo" />
 
-          <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
+          <div className=" pointer-events-none absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap ">
             Direct message
           </div>
         </div>
@@ -202,7 +202,7 @@ const Sidebar = ({ setUser, user }) => {
               <div className="text-white w-6 flex items-center justify-center text-center">
                 {getServerInitials(s.name)}
               </div>
-              <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
+              <div className="pointer-events-none absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
                 {s.name}
               </div>
             </div>
@@ -217,14 +217,14 @@ const Sidebar = ({ setUser, user }) => {
             }}
           >
             <FiPlus size={24} color="white" />
-            <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
+            <div className="pointer-events-none absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
               Add a server
             </div>
           </div>
 
           <div className="bg-[#43B581] p-2 rounded-2xl cursor-pointer group relative">
             <MdOutlineSearch size={24} color="white" />
-            <div className="absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
+            <div className="pointer-events-none absolute top-1 left-12  z-[999] border border-gray-700 bg-black text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
               Discover servers
             </div>
           </div>
@@ -446,7 +446,7 @@ const Sidebar = ({ setUser, user }) => {
             />
           </Link>
 
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 border border-gray-700 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
+          <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 border border-gray-700 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
             Settings
           </div>
         </div>

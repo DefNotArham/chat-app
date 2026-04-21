@@ -31,8 +31,6 @@ const ServerPage = ({ setUser, user }) => {
     <>
       <Sidebar setUser={setUser} user={user} />
       <ServerSideBar server={server} />
-
-      <div className="ml-89 text-black"> {server?.name}</div>
     </>
   );
 };
