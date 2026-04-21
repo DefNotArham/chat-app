@@ -189,12 +189,13 @@ const Sidebar = ({ setUser, user }) => {
           </div>
         </div>
 
-        <div className="w-12 h-[1px] bg-[#424644]"></div>
+        <div className="w-12 h-[1px] bg-[#232424]"></div>
 
         <div className="flex flex-col gap-4 mt-[1px]">
           {user.servers.map((s) => (
             <div
               className="bg-[#007453] p-2 rounded-2xl cursor-pointer group relative flex items-center justify-center"
+              key={s._id}
               onClick={() => {
                 navigate(`/server/${s._id}`);
               }}
@@ -359,7 +360,7 @@ const Sidebar = ({ setUser, user }) => {
                   className="bg-emerald-500 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"
                   onClick={() => handleJoinServer()}
                 >
-                  Create
+                  Join
                 </button>
               </div>
             </div>

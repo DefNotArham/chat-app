@@ -14,6 +14,12 @@ const serverSchema = new mongoose.Schema({
     },
   ],
   inviteCode: { type: String, unique: true },
+  channels: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "channel",
+    },
+  ],
 });
 
 const Server = mongoose.model("server", serverSchema);
