@@ -580,60 +580,66 @@ const Sidebar = ({ setUser, user }) => {
         ) : null}
       </AnimatePresence>
 
-      {showStatusMenu ? (
-        <div
-          className="absolute bg-[#103f38] left-78  bottom-20 text-white p-3 rounded-2xl flex flex-col w-60 gap-2 z-[999]"
-          ref={statusRef}
-        >
-          <button
-            className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-xl  transition-all"
-            onClick={() => {
-              const newStatus = "Online";
-              setStatus(newStatus);
-              handleChangeStatus(newStatus);
-              setShowStatusMenu(false);
-            }}
+      <AnimatePresence>
+        {showStatusMenu ? (
+          <motion.div
+            className="absolute bg-[#103f38] left-78  bottom-20 text-white p-3 rounded-2xl flex flex-col w-60 gap-2 z-[999]"
+            ref={statusRef}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
           >
-            <FaCircle color="green" size={10} className=" " /> Online
-          </button>
-          <button
-            className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-xl  transition-all"
-            onClick={() => {
-              const newStatus = "Idle";
-              setStatus(newStatus);
-              handleChangeStatus(newStatus);
-              setShowStatusMenu(false);
-            }}
-          >
-            <FaMoon color="yellow" size={10} className=" " />
-            Idle
-          </button>
-          <button
-            className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-2xl  transition-all"
-            onClick={() => {
-              const newStatus = "Do Not Disturb";
-              setStatus(newStatus);
-              handleChangeStatus(newStatus);
-              setShowStatusMenu(false);
-            }}
-          >
-            <MdDoNotDisturbOn color="red" size={10} className=" " />
-            Do Not Disturb
-          </button>
-          <button
-            className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-2xl  transition-all"
-            onClick={() => {
-              const newStatus = "Invisible";
-              setStatus(newStatus);
-              handleChangeStatus(newStatus);
-              setShowStatusMenu(false);
-            }}
-          >
-            <FaCircle color="gray" size={10} className=" " />
-            Invisible
-          </button>
-        </div>
-      ) : null}
+            <button
+              className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-xl  transition-all"
+              onClick={() => {
+                const newStatus = "Online";
+                setStatus(newStatus);
+                handleChangeStatus(newStatus);
+                setShowStatusMenu(false);
+              }}
+            >
+              <FaCircle color="green" size={10} className=" " /> Online
+            </button>
+            <button
+              className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-xl  transition-all"
+              onClick={() => {
+                const newStatus = "Idle";
+                setStatus(newStatus);
+                handleChangeStatus(newStatus);
+                setShowStatusMenu(false);
+              }}
+            >
+              <FaMoon color="yellow" size={10} className=" " />
+              Idle
+            </button>
+            <button
+              className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-2xl  transition-all"
+              onClick={() => {
+                const newStatus = "Do Not Disturb";
+                setStatus(newStatus);
+                handleChangeStatus(newStatus);
+                setShowStatusMenu(false);
+              }}
+            >
+              <MdDoNotDisturbOn color="red" size={10} className=" " />
+              Do Not Disturb
+            </button>
+            <button
+              className="flex items-center gap-2 cursor-pointer hover:bg-[#116852] py-1 px-2 rounded-2xl  transition-all"
+              onClick={() => {
+                const newStatus = "Invisible";
+                setStatus(newStatus);
+                handleChangeStatus(newStatus);
+                setShowStatusMenu(false);
+              }}
+            >
+              <FaCircle color="gray" size={10} className=" " />
+              Invisible
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       {/* <div className="bg-side-bar w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col justify-between z-40">
         <div className="w-[1px] bg-[#424644] min-h-screen"></div>
