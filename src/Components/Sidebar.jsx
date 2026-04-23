@@ -78,46 +78,40 @@ const Sidebar = ({ setUser, user }) => {
   };
 
   const profileRef = useRef(null);
+  const statusRef = useRef(null);
+  const serverPopUpRef = useRef(null);
+  const joinServerPopupRef = useRef(null);
+  const createServerRef = useRef(null);
 
   useEffect(() => {
-    let handler = (e) => {
+    const handler = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setToggleProfileBox(false);
       }
-    };
 
-    document.addEventListener("mousedown", handler);
-
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, []);
-
-  const statusRef = useRef(null);
-
-  useEffect(() => {
-    let handler = (e) => {
       if (statusRef.current && !statusRef.current.contains(e.target)) {
         setShowStatusMenu(false);
       }
-    };
 
-    document.addEventListener("mousedown", handler);
-
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, []);
-
-  const serverPopUpRef = useRef(null);
-
-  useEffect(() => {
-    let handler = (e) => {
       if (
         serverPopUpRef.current &&
         !serverPopUpRef.current.contains(e.target)
       ) {
         setServerPopup(false);
+      }
+
+      if (
+        joinServerPopupRef.current &&
+        !joinServerPopupRef.current.contains(e.target)
+      ) {
+        setJoinServerPopup(false);
+      }
+
+      if (
+        createServerRef.current &&
+        !createServerRef.current.contains(e.target)
+      ) {
+        setCreateServerPopup(false);
       }
     };
 
@@ -299,6 +293,7 @@ const Sidebar = ({ setUser, user }) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
+              ref={createServerRef}
             >
               <h1 className="text-2xl font-semibold mb-4">
                 Creare your own server
@@ -366,6 +361,7 @@ const Sidebar = ({ setUser, user }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
+                ref={joinServerPopupRef}
               >
                 <h1 className="text-2xl font-semibold mb-4">Join a server</h1>
 
