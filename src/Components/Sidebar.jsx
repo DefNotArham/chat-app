@@ -317,12 +317,16 @@ const Sidebar = ({ setUser, user }) => {
                   }}
                 />
 
-                {error && errorType === "server" ? (
-                  <>
-                    <p className="text-red-500 font-semibold mt-3">{error}</p>
-                  </>
-                ) : (
-                  ""
+                {error && errorType === "server" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    className=" px-3 py-2 rounded-lg bg-red-500/20 border border-red-500/50 text-red-500 text-sm flex items-center gap-2 mt-2"
+                  >
+                    <span className="text-red-400 font-bold">!</span>
+                    <span>{error}</span>
+                  </motion.div>
                 )}
               </div>
               <div className="flex justify-between mt-3">
@@ -379,12 +383,16 @@ const Sidebar = ({ setUser, user }) => {
                     }`}
                   />
 
-                  {error && errorType === "serverJoin" ? (
-                    <>
-                      <p className="text-red-500 font-semibold mt-3">{error}</p>
-                    </>
-                  ) : (
-                    ""
+                  {error && errorType === "serverJoin" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className=" px-3 py-2 rounded-lg bg-red-500/20 border border-red-500/50 text-red-500 text-sm flex items-center gap-2 mt-2"
+                    >
+                      <span className="text-red-400 font-bold">!</span>
+                      <span>{error}</span>
+                    </motion.div>
                   )}
                 </div>
                 <div className="flex justify-between mt-3">
