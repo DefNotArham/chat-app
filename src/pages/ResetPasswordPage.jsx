@@ -8,44 +8,35 @@ import { Oval } from "react-loader-spinner";
 const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const { token } = useParams();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResetPassword = async () => {
     setIsLoading(true);
-
     if (!newPassword || !confirmNewPassword) {
       setError("All fields are required");
       setIsLoading(false);
-
       setTimeout(() => {
         setError("");
       }, 3000);
       return;
     }
-
     if (newPassword !== confirmNewPassword) {
       setError("Password does not match");
       setIsLoading(false);
-
       setTimeout(() => {
         setError("");
       }, 3000);
       return;
     }
-
     try {
       const response = await axios.post(
         `http://localhost:8000/auth/reset-password/${token}`,
         { password: newPassword.trim() },
         { withCredentials: true },
       );
-
       if (response.data.success) {
         setSuccess("Password changed successfully");
         setError("");
@@ -55,7 +46,6 @@ const ResetPasswordPage = () => {
       console.log(error);
       setIsLoading(false);
       setError(error?.response?.data?.message || "Server error");
-
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -73,35 +63,43 @@ const ResetPasswordPage = () => {
       {!success ? (
         <>
           <div className="flex flex-col text-center mb-10">
-            <h1 className="text-3xl font-semibold">Change Your Password</h1>
-            <p className="mt-2">
+            <h1 className="text-3xl font-semibold text-white">
+              Change Your Password
+            </h1>
+            <p className="mt-2 text-[#b5bac1]">
               Enter a new password below to change your password.
             </p>
             {error ? (
-              <p className="text-red-500 text-sm mt-2 ml-2 font-bold">
+              <p className="text-[#ed4245] text-sm mt-2 ml-2 font-bold">
                 {error}
               </p>
             ) : (
               ""
             )}
           </div>
-
           <div className="w-full">
             <div>
               <input
                 type="password"
                 placeholder="New password"
-                className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${error ? "border-red-500 border-2" : ""}`}
+                className={`border p-2 rounded-xl bg-[#383a40] text-white placeholder-[#72767d] w-full transition-all ${
+                  error
+                    ? "border-[#ed4245] border-2"
+                    : "border-2 border-[#1e1f22]"
+                }`}
                 onChange={(e) => setNewPassword(e.target.value)}
                 onKeyDown={handleEnter}
               />
             </div>
-
             <div className="mt-3">
               <input
                 type="password"
-                placeholder="Conform new password"
-                className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${error ? "border-red-500 border-2" : ""}`}
+                placeholder="Confirm new password"
+                className={`border p-2 rounded-xl bg-[#383a40] text-white placeholder-[#72767d] w-full transition-all ${
+                  error
+                    ? "border-[#ed4245] border-2"
+                    : "border-2 border-[#1e1f22]"
+                }`}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
                 onKeyDown={handleEnter}
               />
@@ -110,16 +108,16 @@ const ResetPasswordPage = () => {
           <button
             onClick={handleResetPassword}
             disabled={isLoading}
-            className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer mt-3 flex items-center justify-center"
+            className="bg-[#5865f2] hover:bg-[#4752c4] w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer mt-3 flex items-center justify-center transition-colors"
           >
             {isLoading ? (
               <Oval
                 height={26}
                 width={26}
-                color="#ffff"
+                color="#ffffff"
                 visible={true}
                 ariaLabel="oval-loading"
-                secondaryColor="#ffff"
+                secondaryColor="#ffffff"
                 strokeWidth={7}
                 strokeWidthSecondary={5}
               />
@@ -130,8 +128,11 @@ const ResetPasswordPage = () => {
         </>
       ) : (
         <div className="flex flex-col text-center">
-          <h1 className="text-emerald-500 text-2xl font-semibold">{success}</h1>
-          <Link className="underline " to="/login">
+          <h1 className="text-[#57f287] text-2xl font-semibold">{success}</h1>
+          <Link
+            className="underline text-[#5865f2] hover:text-[#4752c4]"
+            to="/login"
+          >
             Login page
           </Link>
         </div>

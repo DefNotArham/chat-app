@@ -20,6 +20,22 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
 
   const navigate = useNavigate();
 
+  const loadServers = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/auth/checkAuth",
+        {},
+        { withCredentials: true },
+      );
+
+      if (response.data.success) {
+        setUser(response.data.user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleLogin = async () => {
     setIsLoading(true);
     try {
@@ -33,10 +49,11 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
       );
 
       if (response.data.success) {
-        navigate("/");
         setUser(response.data.user);
         setIsAuthentication(true);
         setIsLoading(false);
+        loadServers();
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -87,11 +104,11 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
   return (
     <AuthPages>
       <div className="flex flex-col text-center">
-        <h1 className="text-2xl font-semibold">Welcome back!</h1>
-        <p>We are happy to see again!</p>
+        <h1 className="text-2xl font-semibold text-white">Welcome back!</h1>
+        <p className="text-[#b5bac1]">We are happy to see again!</p>
 
         {errorType === "general" && (
-          <p className="text-red-500 text-sm mt-2 ml-2 font-bold flex items-center gap-1">
+          <p className="text-[#ed4245] text-sm mt-2 ml-2 font-bold flex items-center gap-1">
             <MdError />
             {errorMsg}
           </p>
@@ -105,46 +122,46 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
         className="w-full mt-5 flex flex-col gap-5"
       >
         <div className="flex flex-col items-start">
-          <label className="ml-1 my-2">
-            Email Address <span className="text-red-700">*</span>
+          <label className="ml-1 my-2 text-[#b5bac1]">
+            Email Address <span className="text-[#ed4245]">*</span>
           </label>
           <input
             type="text"
             placeholder="Email"
-            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+            className={`border p-2 rounded-xl bg-[#383a40] text-white placeholder-[#72767d] w-full transition-all ${
               errorType === "general" || errorType === "email"
-                ? "border-red-500 border-2 "
-                : "border-2 border-white"
+                ? "border-[#ed4245] border-2"
+                : "border-2 border-[#1e1f22]"
             }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
           {errorType === "email" && (
-            <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
+            <p className="text-[#ed4245] text-sm mt-1">{errorMsg}</p>
           )}
         </div>
 
         <div className="flex flex-col items-start">
-          <label className="ml-1 my-2">
-            Password <span className="text-red-700">*</span>
+          <label className="ml-1 my-2 text-[#b5bac1]">
+            Password <span className="text-[#ed4245]">*</span>
           </label>
           <input
             type="Password"
             placeholder="Password"
-            className={`border p-2 rounded-xl bg-white text-black w-full transition-all ${
+            className={`border p-2 rounded-xl bg-[#383a40] text-white placeholder-[#72767d] w-full transition-all ${
               errorType === "general" || errorType === "password"
-                ? "border-red-500 border-2 "
-                : "border-2 border-white"
+                ? "border-[#ed4245] border-2"
+                : "border-2 border-[#1e1f22]"
             }`}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           {errorType === "password" && (
-            <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
+            <p className="text-[#ed4245] text-sm mt-1">{errorMsg}</p>
           )}
           <a
             onClick={handleForgotPassword}
-            className="mt-2 ml-1 underline text-sm text-[#E8FFF1] cursor-pointer"
+            className="mt-2 ml-1 underline text-sm text-[#b5bac1] hover:text-white cursor-pointer"
           >
             Forgot your password?
           </a>
@@ -153,17 +170,17 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
         <div className="w-full mt-7 flex flex-col items-center text-center">
           <button
             onClick={handleLogin}
-            className="bg-chat-bg w-[80%] py-4 rounded-xl text-sm cursor-pointer flex justify-center items-center"
+            className="bg-[#5865f2] hover:bg-[#4752c4] w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer flex justify-center items-center transition-colors"
             disabled={isLoading}
           >
             {isLoading ? (
               <Oval
                 height={26}
                 width={26}
-                color="#ffff"
+                color="#ffffff"
                 visible={true}
                 ariaLabel="oval-loading"
-                secondaryColor="#ffff"
+                secondaryColor="#ffffff"
                 strokeWidth={7}
                 strokeWidthSecondary={5}
               />
@@ -171,9 +188,12 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
               "Log in"
             )}
           </button>
-          <p className="mt-3 text-[#E8FFF1]">
+          <p className="mt-3 text-[#b5bac1]">
             Need an account?{" "}
-            <Link to="/register" className="underline ">
+            <Link
+              to="/register"
+              className="underline text-[#5865f2] hover:text-[#4752c4]"
+            >
               Register
             </Link>
           </p>
@@ -182,10 +202,10 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
 
       {forgotPassSucess && (
         <>
-          <div className="fixed inset-0 bg-black/50  z-40"></div>
+          <div className="fixed inset-0 bg-black/50 z-40"></div>
 
-          <div className="fixed bg-emerald-500 p-6 rounded-2xl top-10 z-50">
-            <div className="flex items-center gap-3 text-lg font-semibold justify-center">
+          <div className="fixed bg-[#57f287] p-6 rounded-2xl top-10 z-50">
+            <div className="flex items-center gap-3 text-lg font-semibold justify-center text-[#1e1f22]">
               <h1>Check your email to reset your password</h1>
               <IoCloseSharp
                 size={25}

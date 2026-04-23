@@ -165,6 +165,8 @@ const ServerPage = ({ setUser, user }) => {
         user={user}
         setChannelPopup={setChannelPopup}
       />
+
+      {/* Invite to Server popup */}
       <AnimatePresence>
         {inviteToServerPopUp && (
           <motion.div
@@ -175,7 +177,7 @@ const ServerPage = ({ setUser, user }) => {
             transition={{ duration: 0.2 }}
           >
             <motion.div
-              className="bg-[#103f38] p-5 rounded-2xl text-white w-[30%] flex flex-col gap-4"
+              className="bg-[#2b2d31] p-5 rounded-2xl text-white w-[30%] flex flex-col gap-4"
               ref={inviteCodeRef}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -184,14 +186,14 @@ const ServerPage = ({ setUser, user }) => {
             >
               <h1 className="text-lg font-semibold">Invite to Server</h1>
 
-              <p className="text-sm text-gray-300">Share this invite code:</p>
+              <p className="text-sm text-[#b5bac1]">Share this invite code:</p>
 
-              <div className="bg-gray-700 p-2 rounded-lg text-center">
+              <div className="bg-[#383a40] p-2 rounded-lg text-center text-white">
                 {server?.inviteCode ?? "Loading..."}
               </div>
 
               <button
-                className="bg-emerald-500 py-2 rounded-lg cursor-pointer"
+                className="bg-[#5865f2] hover:bg-[#4752c4] py-2 rounded-lg cursor-pointer transition-colors"
                 onClick={() => setInviteToServerPopUp(false)}
               >
                 Close
@@ -201,6 +203,7 @@ const ServerPage = ({ setUser, user }) => {
         )}
       </AnimatePresence>
 
+      {/* Leave server confirm popup */}
       <AnimatePresence>
         {leaveConfirmPopup ? (
           <>
@@ -212,14 +215,14 @@ const ServerPage = ({ setUser, user }) => {
               transition={{ duration: 0.2 }}
             >
               <motion.div
-                className=" bg-[#480101] flex flex-col gap-3 p-10 rounded-2xl w-[33%] "
+                className="bg-[#2b2d31] flex flex-col gap-3 p-10 rounded-2xl w-[33%]"
                 ref={confirmLeaveRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
               >
-                <h2 className="text-lg font-semibold text-white text-center ">
+                <h2 className="text-lg font-semibold text-white text-center">
                   Are you sure you want to leave the server?
                 </h2>
 
@@ -228,16 +231,16 @@ const ServerPage = ({ setUser, user }) => {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="mb-3 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2"
+                    className="mb-3 px-3 py-2 rounded-lg bg-[#ed4245]/10 border border-[#ed4245]/30 text-[#ed4245] text-sm flex items-center gap-2"
                   >
-                    <span className="text-red-400 font-bold">!</span>
+                    <span className="font-bold">!</span>
                     <span className="text-center">{error}</span>
                   </motion.div>
                 )}
 
                 <div className="flex items-center gap-3 mt-3">
                   <button
-                    className="bg-[#6e6e6e] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer text-white"
+                    className="bg-[#4e5058] hover:bg-[#6d6f78] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer text-white transition-colors"
                     onClick={() => setLeaveConfirmPopup(false)}
                   >
                     Cancel
@@ -246,7 +249,7 @@ const ServerPage = ({ setUser, user }) => {
                     onClick={() => {
                       handleLeaveServer();
                     }}
-                    className="bg-[#a50303] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer text-white"
+                    className="bg-[#ed4245] hover:bg-[#c03537] px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer text-white transition-colors"
                   >
                     Leave server
                   </button>
@@ -257,6 +260,7 @@ const ServerPage = ({ setUser, user }) => {
         ) : null}
       </AnimatePresence>
 
+      {/* Create channel popup */}
       <AnimatePresence>
         {channelPopup && (
           <motion.div
@@ -266,7 +270,7 @@ const ServerPage = ({ setUser, user }) => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-[#103f38] w-[350px] p-5 rounded-2xl text-white"
+              className="bg-[#2b2d31] w-[350px] p-5 rounded-2xl text-white"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -278,7 +282,7 @@ const ServerPage = ({ setUser, user }) => {
               <input
                 type="text"
                 placeholder="Channel name"
-                className="w-full h-10 px-3 rounded-lg bg-gray-200 text-black outline-none mb-4"
+                className="w-full h-10 px-3 rounded-lg bg-[#383a40] text-white placeholder-[#72767d] outline-none mb-4"
                 onChange={(e) => setNewChannel(e.target.value)}
                 value={newChannel}
               />
@@ -288,9 +292,9 @@ const ServerPage = ({ setUser, user }) => {
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
-                  className="mb-3 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2"
+                  className="mb-3 px-3 py-2 rounded-lg bg-[#ed4245]/10 border border-[#ed4245]/30 text-[#ed4245] text-sm flex items-center gap-2"
                 >
-                  <span className="text-red-400 font-bold">!</span>
+                  <span className="font-bold">!</span>
                   <span>{error}</span>
                 </motion.div>
               )}
@@ -298,13 +302,13 @@ const ServerPage = ({ setUser, user }) => {
               <div className="flex justify-between">
                 <button
                   onClick={() => setChannelPopup(false)}
-                  className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 transition cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-[#4e5058] hover:bg-[#6d6f78] transition cursor-pointer"
                 >
                   Cancel
                 </button>
 
                 <button
-                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 transition cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-[#5865f2] hover:bg-[#4752c4] transition cursor-pointer"
                   onClick={handleCreateChannel}
                 >
                   Create

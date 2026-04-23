@@ -60,8 +60,8 @@ const ServerSideBar = ({
   }, []);
 
   return (
-    <div className="bg-side-bar w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col z-40">
-      <div className="h-12 flex items-center px-1 text-white font-semibold border-b border-[#424644]  justify-between pr-5 text-sm">
+    <div className="bg-[#2b2d31] w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col z-40">
+      <div className="h-12 flex items-center px-1 text-white font-semibold border-b border-[#1e1f22] justify-between px-5 text-sm">
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => {
@@ -81,10 +81,9 @@ const ServerSideBar = ({
       </div>
 
       <AnimatePresence>
-        {" "}
         {serverSetting && (
           <motion.div
-            className="bg-[#103f38] w-[260px] fixed top-12 rounded-xl shadow-lg border border-[#2d2d2d] z-[1000] p-2 text-white text-sm"
+            className="bg-[#111214] w-[260px] fixed top-12 rounded-xl shadow-lg border border-[#1e1f22] z-[1000] p-2 text-white text-sm"
             ref={serverSettingsRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -93,7 +92,7 @@ const ServerSideBar = ({
           >
             {server.owner.toString() === user._id ? (
               <>
-                <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#007453] transition cursor-pointer flex items-center justify-between gap-3 group">
+                <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group">
                   Server settings
                   <IoSettingsSharp
                     size={15}
@@ -103,7 +102,7 @@ const ServerSideBar = ({
                 </button>
 
                 <button
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#007453] transition cursor-pointer flex items-center justify-between gap-3 group"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group"
                   onClick={() => {
                     setChannelPopup(true);
                   }}
@@ -112,14 +111,14 @@ const ServerSideBar = ({
                   <IoCreate
                     size={15}
                     color="white"
-                    className="mr-3 cursor-pointer  group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-200 ease-in-out"
+                    className="mr-3 cursor-pointer group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-200 ease-in-out"
                   />
                 </button>
               </>
             ) : null}
 
             <button
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#007453] transition cursor-pointer flex items-center justify-between gap-3 group"
+              className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group"
               onClick={() => {
                 setInviteToServerPopUp(true);
               }}
@@ -135,7 +134,7 @@ const ServerSideBar = ({
               onClick={() => {
                 setLeaveConfirmPopup(true);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-600 transition cursor-pointer flex items-center justify-between gap-3 group"
+              className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#ed4245] transition cursor-pointer flex items-center justify-between gap-3 group"
             >
               Leave Server
               <IoIosExit
@@ -151,7 +150,7 @@ const ServerSideBar = ({
         {server?.channels?.map((c) => (
           <div
             key={c?._id}
-            className="text-white flex items-center gap-2 bg-[#00ae80] justify-center px-10 rounded-lg h-9 text-sm cursor-pointer"
+            className="text-[#b5bac1] hover:text-white flex items-center gap-2 hover:bg-[#383a40] justify-center px-10 rounded-lg h-9 text-sm cursor-pointer transition-colors"
           >
             <SiHashicorp />
             <p>{c?.name}</p>
