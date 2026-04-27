@@ -11,14 +11,15 @@ import { PiWarningFill } from "react-icons/pi";
 const ServerPage = ({ setUser, user }) => {
   const { serverId } = useParams();
   const [server, setServer] = useState(null);
+
   const [inviteToServerPopUp, setInviteToServerPopUp] = useState(false);
   const [leaveConfirmPopup, setLeaveConfirmPopup] = useState(false);
 
-  const [error, setError] = useState("");
-  const [errorType, setErrorType] = useState("");
-
   const [newChannel, setNewChannel] = useState("");
   const [channelPopup, setChannelPopup] = useState(false);
+
+  const [error, setError] = useState("");
+  const [errorType, setErrorType] = useState("");
 
   const navigate = useNavigate();
 

@@ -28,7 +28,7 @@ router.delete(
   deleteChannelController,
 );
 
-router.post(
+router.get(
   "/channel/load-channel/:serverId/channel/:channelId",
   verifyToken,
   loadChannelController,

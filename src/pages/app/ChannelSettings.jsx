@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -11,13 +11,19 @@ const ChannelSettings = ({ setUser, user }) => {
   const [selectedTab, setSelectedTab] = useState("overview");
   const [deleteChannel, setDeleteChannel] = useState(false);
 
-  const { serverId } = useParams();
-  const { channelId } = useParams();
+  const { serverId, channelId } = useParams();
+
+  const [channel, setChannel] = useState(null);
+  const [channelName, setChannelName] = useState(channel?.name);
 
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
   const [errorType, setErrorType] = useState("");
+
+  useEffect(() => {
+    handleLoadChannel();
+  }, []);
 
   const loadServers = async () => {
     try {
@@ -57,6 +63,24 @@ const ChannelSettings = ({ setUser, user }) => {
         setError("");
         setErrorType("");
       }, 3000);
+    }
+  };
+
+  const handleLoadChannel = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/server/channel/load-channel/${serverId}/channel/${channelId}`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response?.data.success) {
+        setChannel(response.data.channel);
+        setChannelName(response.data.channel.name);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -105,6 +129,8 @@ const ChannelSettings = ({ setUser, user }) => {
               <input
                 type="text"
                 placeholder="Enter channel name"
+                value={channelName}
+                onChange={(e) => setChannelName(e.target.value)}
                 className="w-full bg-discord-input text-white px-3 py-2 rounded-md outline-none border border-transparent focus:border-discord-blurple"
               />
             </div>
