@@ -184,7 +184,7 @@ const ServerPage = ({ setUser, user }) => {
             transition={{ duration: 0.2 }}
           >
             <motion.div
-              className="bg-discord-sidebar p-5 rounded-2xl text-white w-[30%] flex flex-col gap-4"
+              className="bg-discord-sidebar p-5 rounded-2xl text-white w-[60%] sm:w-[50%] md:w-[40%] flex flex-col gap-4"
               ref={inviteCodeRef}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -224,7 +224,7 @@ const ServerPage = ({ setUser, user }) => {
               transition={{ duration: 0.2 }}
             >
               <motion.div
-                className="bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl w-[33%]"
+                className="bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl sm:w-[55%] md:w-[45%]  lg:w-[33%]"
                 ref={confirmLeaveRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -260,7 +260,7 @@ const ServerPage = ({ setUser, user }) => {
                     }}
                     className="bg-discord-danger hover:bg-discord-danger-hover px-5 text-sm font-semibold py-3 rounded-lg w-[50%] cursor-pointer text-white transition-colors"
                   >
-                    Leave server
+                    Leave
                   </button>
                 </div>
               </motion.div>

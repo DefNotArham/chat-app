@@ -238,7 +238,7 @@ const Sidebar = ({ setUser, user }) => {
               transition={{ duration: 0.2 }}
             >
               <motion.div
-                className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white w-[30%] gap-5 h-46 items-center justify-center"
+                className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white w-[55%] sm:w-[40%] md:w-[30%] gap-5 h-46 items-center justify-center"
                 ref={serverPopUpRef}
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -287,7 +287,7 @@ const Sidebar = ({ setUser, user }) => {
             transition={{ duration: 0.2 }}
           >
             <motion.div
-              className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white w-[30%] justify-center text-center"
+              className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white justify-center text-center w-[70%] sm:w-[50%] md:w-[30%] "
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -357,7 +357,7 @@ const Sidebar = ({ setUser, user }) => {
               transition={{ duration: 0.2 }}
             >
               <motion.div
-                className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white w-[30%] justify-center text-center"
+                className="bg-discord-sidebar p-5 rounded-2xl flex flex-col text-white  w-[70%] sm:w-[50%] md:w-[30%]  justify-center text-center"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -415,7 +415,7 @@ const Sidebar = ({ setUser, user }) => {
       </AnimatePresence>
 
       <div
-        className="bg-discord-deep w-84 h-[60px] flex items-center absolute bottom-3 z-[999] left-2 rounded-2xl px-1 justify-between"
+        className="bg-discord-deep w-65 md:w-84 h-[60px] flex items-center absolute bottom-3 z-[999] left-2 rounded-2xl px-1 justify-between"
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >

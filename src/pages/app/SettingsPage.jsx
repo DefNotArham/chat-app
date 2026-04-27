@@ -459,7 +459,7 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl w-[33%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl  w-[70%] sm:w-[50%] md:w-[30%]  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               >
                 <div className="w-full flex flex-col gap-3">
                   <h2 className="text-xl font-semibold text-white">
@@ -554,10 +554,10 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl w-[33%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl  w-[70%] sm:w-[50%] md:w-[30%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               >
                 <div className="w-full flex flex-col gap-3">
-                  <h2 className="text-xl font-semibold text-white">
+                  <h2 className="text-xl font-semibold text-white text-center">
                     Are you sure you want to log out?
                   </h2>
 
@@ -610,7 +610,7 @@ const SettingsPage = ({ user, setUser, setIsAuthentication }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl w-[33%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="fixed bg-discord-sidebar flex flex-col gap-3 p-10 rounded-2xl  w-[70%] sm:w-[50%] md:w-[30%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               >
                 <div className="w-full flex flex-col gap-3">
                   <h2 className="text-xl font-semibold text-white">

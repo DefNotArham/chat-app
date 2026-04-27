@@ -7,6 +7,7 @@ import DefaultBackground from "../../Components/DefaultBackground";
 
 import { MdDeleteForever } from "react-icons/md";
 import { FaCircleXmark } from "react-icons/fa6";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const ChannelSettings = ({ setUser, user }) => {
   const [selectedTab, setSelectedTab] = useState("overview");
@@ -16,6 +17,8 @@ const ChannelSettings = ({ setUser, user }) => {
 
   const [channel, setChannel] = useState(null);
   const [channelName, setChannelName] = useState(channel?.name);
+
+  const [channelSidebar, setChannelSidebar] = useState(false);
 
   const navigate = useNavigate();
 
@@ -87,8 +90,8 @@ const ChannelSettings = ({ setUser, user }) => {
 
   return (
     <DefaultBackground>
-      <div className="flex h-screen text-discord-white w-full">
-        <div className="w-[320px] bg-discord-deep border-r border-discord-divider p-4">
+      <div className="flex h-screen text-discord-white w-full ">
+        <div className="custom2:w-[400px] hidden custom2:block  bg-discord-deep border-r border-discord-divider p-4">
           <h2 className="text-sm text-discord-muted mb-4 uppercase tracking-wide">
             Channel Settings
           </h2>
@@ -120,10 +123,91 @@ const ChannelSettings = ({ setUser, user }) => {
           </div>
         </div>
 
+        <AnimatePresence>
+          {channelSidebar && (
+            <>
+              <motion.div
+                className="fixed inset-0 bg-black/50 z-[999]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setChannelSidebar(false)}
+              />
+
+              <motion.div
+                className="fixed top-0 left-0 h-full w-[260px] bg-discord-deep border-r border-discord-divider z-[1000] p-4"
+                initial={{ x: -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                transition={{ type: "tween", duration: 0.2 }}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-sm text-discord-muted uppercase tracking-wide">
+                    Channel Settings
+                  </h2>
+
+                  <FaCircleXmark
+                    size={20}
+                    className="cursor-pointer text-discord-muted hover:text-white"
+                    onClick={() => setChannelSidebar(false)}
+                  />
+                </div>
+
+                {/* Tabs */}
+                <div className="flex flex-col gap-2">
+                  <button
+                    className={`text-left px-3 py-2 rounded-md text-sm cursor-pointer ${
+                      selectedTab === "overview"
+                        ? "bg-discord-btn-neutral text-white"
+                        : "text-discord-muted hover:text-white hover:bg-discord-bg"
+                    }`}
+                    onClick={() => {
+                      setSelectedTab("overview");
+                      setChannelSidebar(false);
+                    }}
+                  >
+                    Overview
+                  </button>
+
+                  <button
+                    className={`text-left px-3 py-2 rounded-md text-sm cursor-pointer ${
+                      selectedTab === "permission"
+                        ? "bg-discord-btn-neutral text-white"
+                        : "text-discord-muted hover:text-white hover:bg-discord-bg"
+                    }`}
+                    onClick={() => {
+                      setSelectedTab("permission");
+                      setChannelSidebar(false);
+                    }}
+                  >
+                    Permissions
+                  </button>
+
+                  <button
+                    className="text-left px-3 py-2 rounded-md bg-discord-danger text-white mt-2 text-sm cursor-pointer flex items-center justify-between"
+                    onClick={() => {
+                      setDeleteChannel(true);
+                      setChannelSidebar(false);
+                    }}
+                  >
+                    Delete Channel <MdDeleteForever size={16} />
+                  </button>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+        <GiHamburgerMenu
+          size={28}
+          className="cursor-pointer text-discord-muted absolute top-10 custom2:hidden block left-8"
+          onClick={() => setChannelSidebar(true)}
+        />
+
         <div className=" bg-discord-sidebar w-full flex flex-col pl-30 pt-5">
           {selectedTab === "overview" ? (
-            <div className="mb-8 max-w-[500px]">
-              <label className="block text-xs text-discord-muted mb-2 uppercase tracking-wide">
+            <div className="mb-8 custom2:max-w-[500px] ">
+              <label className="block text-xs text-discord-uted mb-2 uppercase tracking-wide">
                 Channel Name
               </label>
 
@@ -138,7 +222,7 @@ const ChannelSettings = ({ setUser, user }) => {
           ) : null}
         </div>
 
-        <div className="bg-discord-sidebar flex flex-col items-end px-20 pt-10">
+        <div className="bg-discord-sidebar flex flex-col items-end px-10 custom2:px-20 pt-10">
           <FaCircleXmark
             size={28}
             className="cursor-pointer text-discord-muted"
