@@ -2,6 +2,8 @@ import React, { Children, use, useEffect, useState } from "react";
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 
+import useAuthStore from "./Stores/Auth.Store";
+
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import VerificationPage from "./pages/Auth/VerificationPage";
