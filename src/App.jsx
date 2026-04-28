@@ -12,6 +12,8 @@ import SettingsPage from "./pages/app/SettingsPage";
 import ServerPage from "./pages/app/ServerPage";
 import ChannelSettings from "./pages/app/ChannelSettings";
 
+import LoadingUi from "./Components/LoadingUi";
+
 const App = () => {
   const [isAuthentication, setIsAuthentication] = useState(false);
   const [user, setUser] = useState(null);

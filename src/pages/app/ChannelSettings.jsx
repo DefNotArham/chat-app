@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 
 import DefaultBackground from "../../Components/DefaultBackground";
+import LoadingUi from "../../Components/LoadingUi";
 
 import { MdDeleteForever } from "react-icons/md";
 import { FaCircleXmark, FaSketch } from "react-icons/fa6";
@@ -22,6 +23,8 @@ const ChannelSettings = ({ setUser, user }) => {
 
   const [editChannelName, setEditChannelName] = useState(false);
   const [editChannelLoading, setEditChannelLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -74,7 +77,7 @@ const ChannelSettings = ({ setUser, user }) => {
   };
 
   const handleLoadChannel = async () => {
-    setEditChannelLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:8000/server/channel/load-channel/${serverId}/channel/${channelId}`,
@@ -86,24 +89,22 @@ const ChannelSettings = ({ setUser, user }) => {
       if (response?.data.success) {
         setChannel(response.data.channel);
         setChannelName(response.data.channel.name);
-        setEditChannelLoading(false);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
-      setEditChannelLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleEditChannelName = async () => {
+    setEditChannelLoading(true);
+
     try {
       const response = await axios.post(
         `http://localhost:8000/server/channel/edit-channelName/${serverId}/channel/${channelId}`,
-        {
-          newChannelName: channelName,
-        },
-        {
-          withCredentials: true,
-        },
+        { newChannelName: channelName },
+        { withCredentials: true },
       );
 
       if (response.data.success) {
@@ -118,6 +119,8 @@ const ChannelSettings = ({ setUser, user }) => {
         setError("");
         setErrorType("");
       }, 3000);
+    } finally {
+      setEditChannelLoading(false);
     }
   };
 
@@ -126,6 +129,9 @@ const ChannelSettings = ({ setUser, user }) => {
       handleEditChannelName();
     }
   };
+  if (isLoading) {
+    return <LoadingUi />;
+  }
 
   return (
     <DefaultBackground>
