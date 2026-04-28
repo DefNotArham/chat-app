@@ -6,7 +6,7 @@ import axios from "axios";
 import DefaultBackground from "../../Components/DefaultBackground";
 
 import { MdDeleteForever } from "react-icons/md";
-import { FaCircleXmark } from "react-icons/fa6";
+import { FaCircleXmark, FaSketch } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 const ChannelSettings = ({ setUser, user }) => {
@@ -21,6 +21,7 @@ const ChannelSettings = ({ setUser, user }) => {
   const [channelSidebar, setChannelSidebar] = useState(false);
 
   const [editChannelName, setEditChannelName] = useState(false);
+  const [editChannelLoading, setEditChannelLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -73,6 +74,7 @@ const ChannelSettings = ({ setUser, user }) => {
   };
 
   const handleLoadChannel = async () => {
+    setEditChannelLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:8000/server/channel/load-channel/${serverId}/channel/${channelId}`,
@@ -84,9 +86,38 @@ const ChannelSettings = ({ setUser, user }) => {
       if (response?.data.success) {
         setChannel(response.data.channel);
         setChannelName(response.data.channel.name);
+        setEditChannelLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setEditChannelLoading(false);
+    }
+  };
+
+  const handleEditChannelName = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/server/channel/edit-channelName/${serverId}/channel/${channelId}`,
+        {
+          newChannelName: channelName,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.data.success) {
+        loadServers();
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data.message);
+      setErrorType("editChannel");
+
+      setTimeout(() => {
+        setError("");
+        setErrorType("");
+      }, 3000);
     }
   };
 
@@ -214,7 +245,9 @@ const ChannelSettings = ({ setUser, user }) => {
               <div className="w-full bg-discord-input text-white px-3 py-2 rounded-md outline-none border border-transparent focus:border-discord-blurple flex justify-between">
                 <input
                   type="text"
-                  placeholder="Enter channel name"
+                  placeholder={
+                    editChannelLoading ? "Loading..." : "Enter channel name"
+                  }
                   value={channelName}
                   onChange={(e) => {
                     setChannelName(e.target.value);
@@ -222,10 +255,25 @@ const ChannelSettings = ({ setUser, user }) => {
                   className="w-[80%] outline-0 "
                 />
 
-                <button className="bg-discord-success text-xs px-3 py-1 rounded-md cursor-pointer">
-                  Save
+                <button
+                  onClick={handleEditChannelName}
+                  className="bg-discord-success text-xs px-3 py-1 rounded-md cursor-pointer"
+                >
+                  {editChannelLoading ? "Loading..." : "Save"}
                 </button>
               </div>
+
+              {error && errorType === "editChannel" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="mb-3 px-3 py-2 rounded-lg bg-discord-danger/10 border border-discord-danger/30 text-discord-danger text-sm flex items-center gap-2 mt-3"
+                >
+                  <span className="font-bold">!</span>
+                  <span>{error}</span>
+                </motion.div>
+              )}
             </div>
           ) : null}
         </div>
