@@ -1,12 +1,17 @@
 import express from "express";
 import createServerController from "../controllers/serverControllers/createServer.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
+
+// Server
 import loadServerController from "../controllers/serverControllers/loadServer.controller.js";
 import joinServerController from "../controllers/serverControllers/joinServer.controller.js";
 import leaveServerController from "../controllers/serverControllers/leaveServer.controller.js";
+
+// Channel
 import createChannelController from "../controllers/channelControllers/createChannel.controller.js";
 import deleteChannelController from "../controllers/channelControllers/deleteChannel.controller.js";
 import loadChannelController from "../controllers/channelControllers/loadChannel.controller.js";
+import editChannelController from "../controllers/channelControllers/editChannelName.controller.js";
 
 const router = express.Router();
 
@@ -32,6 +37,12 @@ router.get(
   "/channel/load-channel/:serverId/channel/:channelId",
   verifyToken,
   loadChannelController,
+);
+
+router.post(
+  "/channel/edit-channelName/:serverId/channel/:channelId",
+  verifyToken,
+  editChannelController,
 );
 
 export default router;
