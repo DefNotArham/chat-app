@@ -112,7 +112,12 @@ const ServerSideBar = ({
           >
             {server.owner.toString() === user._id ? (
               <>
-                <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group">
+                <button
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group"
+                  onClick={() => {
+                    navigate(`/server/${serverId}/settings`);
+                  }}
+                >
                   Server settings
                   <IoSettingsSharp
                     size={15}

@@ -11,6 +11,7 @@ import DirectMessagePage from "./pages/app/DirectMessagePage";
 import SettingsPage from "./pages/app/SettingsPage";
 import ServerPage from "./pages/app/ServerPage";
 import ChannelSettings from "./pages/app/ChannelSettings";
+import ServerSettings from "./pages/app/ServerSettings";
 
 import LoadingUi from "./Components/LoadingUi";
 
@@ -150,6 +151,17 @@ const App = () => {
           <ProtectedRoutes>
             <ProtectedSettingsRoutes>
               <ChannelSettings setUser={setUser} user={user} />
+            </ProtectedSettingsRoutes>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/server/:serverId/settings"
+        element={
+          <ProtectedRoutes>
+            <ProtectedSettingsRoutes>
+              <ServerSettings />
             </ProtectedSettingsRoutes>
           </ProtectedRoutes>
         }
