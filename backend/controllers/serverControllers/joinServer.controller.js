@@ -26,6 +26,7 @@ const joinServerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Server not found",
+        typeError: "serverJoin",
       });
 
     const alreadyMember = server.members.includes(req.userId);
@@ -34,6 +35,7 @@ const joinServerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "You are already in this server",
+        typeError: "serverJoin",
       });
 
     server.members.push(req.userId);
@@ -45,6 +47,7 @@ const joinServerController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Joined server successfully",
+      server,
     });
   } catch (error) {
     console.log(error);

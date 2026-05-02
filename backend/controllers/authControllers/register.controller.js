@@ -60,7 +60,7 @@ const registerController = async (req, res) => {
     if (!/\d/.test(password))
       return res.status(400).json({
         success: false,
-        messsage: "Password must include atleast one number",
+        message: "Password must include atleast one number",
         typeError: "password",
       });
 

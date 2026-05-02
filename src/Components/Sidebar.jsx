@@ -18,16 +18,30 @@ import { ImCross } from "react-icons/im";
 
 import getServerInitials from "../utils/getServerInitials.js";
 
-const Sidebar = ({ setUser, user }) => {
+//Stores
+import useAuthStore from "../Stores/Auth.Store.js";
+import useUserStore from "../Stores/User.Store.js";
+import useServerStore from "../Stores/Server.Store.js";
+
+const Sidebar = () => {
+  const { user, loading } = useAuthStore();
+  const { status, changeStatus } = useUserStore();
+  const {
+    loadServers,
+    createServer,
+    joinServer,
+    serverError,
+    errorType,
+    servers,
+    loadingServers,
+    loadingCreate,
+  } = useServerStore();
+
   const [isHovering, setIsHovering] = useState(false);
   const [toggleProfileBox, setToggleProfileBox] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
-  const [status, setStatus] = useState(user?.status);
 
   const [copied, setCopied] = useState(false);
-
-  const [error, setError] = useState("");
-  const [errorType, setErrorType] = useState("");
 
   const [serverPopup, setServerPopup] = useState(false);
   const [createServerPopup, setCreateServerPopup] = useState(false);
@@ -39,42 +53,18 @@ const Sidebar = ({ setUser, user }) => {
 
   const navigate = useNavigate();
 
-  const loadServers = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/checkAuth",
-        {},
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    setStatus(user?.status);
+    if (user?.status) {
+      useUserStore.setState({ status: user.status });
+    }
   }, [user]);
 
-  const handleChangeStatus = async (newStatus) => {
-    try {
-      await axios.patch(
-        "http://localhost:8000/user/change-status",
-        { status: newStatus },
-        { withCredentials: true },
-      );
+  useEffect(() => {
+    loadServers();
+  }, []);
 
-      setStatus(newStatus);
-      setUser((prev) => ({
-        ...prev,
-        status: newStatus,
-      }));
-    } catch (error) {
-      console.log(error);
-    }
+  const handleChangeStatus = async (newStatus) => {
+    await changeStatus(newStatus);
   };
 
   const profileRef = useRef(null);
@@ -123,50 +113,40 @@ const Sidebar = ({ setUser, user }) => {
   }, []);
 
   const handleCreateServer = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/server/create-server",
-        { name: serverName.trim() },
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        await loadServers();
-        setCreateServerPopup(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setError(error?.response?.data.message);
-      setErrorType("server");
-
-      setTimeout(() => {
-        setError("");
-        setErrorType("");
-      }, 3000);
+    const result = await createServer(serverName);
+    if (result.success) {
+      setCreateServerPopup(false);
+      setServerName("");
     }
   };
+  // const handleJoinServer = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:8000/server/join-server",
+  //       { inviteCode: inviteCode.trim() },
+  //       { withCredentials: true },
+  //     );
+
+  //     if (response.data.success) {
+  //       await loadServers();
+  //       setJoinServerPopup(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setError(error?.response?.data.message);
+  //     setErrorType("serverJoin");
+
+  //     setTimeout(() => {
+  //       setError("");
+  //       setErrorType("");
+  //     }, 3000);
+  //   }
+  // };
 
   const handleJoinServer = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/server/join-server",
-        { inviteCode: inviteCode.trim() },
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        await loadServers();
-        setJoinServerPopup(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setError(error?.response?.data.message);
-      setErrorType("serverJoin");
-
-      setTimeout(() => {
-        setError("");
-        setErrorType("");
-      }, 3000);
+    const result = await joinServer(inviteCode);
+    if (result.success) {
+      setJoinServerPopup(false);
     }
   };
 
@@ -187,7 +167,7 @@ const Sidebar = ({ setUser, user }) => {
         <div className="w-12 h-[1px] bg-discord-divider"></div>
 
         <div className="flex flex-col gap-4 mt-[1px]">
-          {user?.servers?.map((s) => (
+          {servers?.map((s) => (
             <div
               className="bg-discord-bg hover:bg-discord-blurple p-2 rounded-2xl cursor-pointer group relative flex items-center justify-center transition-colors"
               key={s._id}
@@ -304,7 +284,7 @@ const Sidebar = ({ setUser, user }) => {
                 </label>
                 <input
                   className={`w-full bg-discord-input text-white h-10 rounded-lg px-2 placeholder-discord-placeholder ${
-                    error && errorType === "server"
+                    serverError && errorType === "createserver"
                       ? "border border-discord-danger"
                       : ""
                   }`}
@@ -313,7 +293,7 @@ const Sidebar = ({ setUser, user }) => {
                   }}
                 />
 
-                {error && errorType === "server" && (
+                {serverError && errorType === "createserver" && (
                   <motion.div
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -321,7 +301,7 @@ const Sidebar = ({ setUser, user }) => {
                     className="px-3 py-2 rounded-lg bg-discord-danger/20 border border-discord-danger/50 text-discord-danger text-sm flex items-center gap-2 mt-2"
                   >
                     <span className="text-discord-danger font-bold">!</span>
-                    <span>{error}</span>
+                    <span>{serverError}</span>
                   </motion.div>
                 )}
               </div>
@@ -374,13 +354,13 @@ const Sidebar = ({ setUser, user }) => {
                     onChange={(e) => setInviteCode(e.target.value)}
                     value={inviteCode}
                     className={`w-full bg-discord-input text-white h-10 rounded-lg px-2 placeholder-discord-placeholder ${
-                      error && errorType === "serverJoin"
+                      serverError && errorType === "serverJoin"
                         ? "border border-discord-danger"
                         : ""
                     }`}
                   />
 
-                  {error && errorType === "serverJoin" && (
+                  {serverError && errorType === "serverJoin" && (
                     <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -388,7 +368,7 @@ const Sidebar = ({ setUser, user }) => {
                       className="px-3 py-2 rounded-lg bg-discord-danger/20 border border-discord-danger/50 text-discord-danger text-sm flex items-center gap-2 mt-2"
                     >
                       <span className="text-discord-danger font-bold">!</span>
-                      <span>{error}</span>
+                      <span>{serverError}</span>
                     </motion.div>
                   )}
                 </div>
@@ -598,9 +578,7 @@ const Sidebar = ({ setUser, user }) => {
             <button
               className="flex items-center gap-2 cursor-pointer hover:bg-discord-input py-1 px-2 rounded-xl transition-all"
               onClick={() => {
-                const newStatus = "Online";
-                setStatus(newStatus);
-                handleChangeStatus(newStatus);
+                handleChangeStatus("Online");
                 setShowStatusMenu(false);
               }}
             >
@@ -609,9 +587,7 @@ const Sidebar = ({ setUser, user }) => {
             <button
               className="flex items-center gap-2 cursor-pointer hover:bg-discord-input py-1 px-2 rounded-xl transition-all"
               onClick={() => {
-                const newStatus = "Idle";
-                setStatus(newStatus);
-                handleChangeStatus(newStatus);
+                handleChangeStatus("Idle");
                 setShowStatusMenu(false);
               }}
             >
@@ -621,9 +597,7 @@ const Sidebar = ({ setUser, user }) => {
             <button
               className="flex items-center gap-2 cursor-pointer hover:bg-discord-input py-1 px-2 rounded-2xl transition-all"
               onClick={() => {
-                const newStatus = "Do Not Disturb";
-                setStatus(newStatus);
-                handleChangeStatus(newStatus);
+                handleChangeStatus("Do Not Disturb");
                 setShowStatusMenu(false);
               }}
             >
@@ -633,9 +607,7 @@ const Sidebar = ({ setUser, user }) => {
             <button
               className="flex items-center gap-2 cursor-pointer hover:bg-discord-input py-1 px-2 rounded-2xl transition-all"
               onClick={() => {
-                const newStatus = "Invisible";
-                setStatus(newStatus);
-                handleChangeStatus(newStatus);
+                handleChangeStatus("Invisible");
                 setShowStatusMenu(false);
               }}
             >

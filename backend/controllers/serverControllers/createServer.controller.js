@@ -19,6 +19,7 @@ const createServerController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Server name is required",
+        typeError: "createserver",
       });
 
     const newServer = new Server({
@@ -45,14 +46,17 @@ const createServerController = async (req, res) => {
       },
     });
 
-    res
-      .status(200)
-      .json({ success: true, message: "Server created successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Server created successfully",
+      newServer,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
       message: "Server error",
+      typeError: "general",
     });
   }
 };

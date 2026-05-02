@@ -9,6 +9,7 @@ const forgotPasswordController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "This field is required",
+        typeError: "email",
       });
     const existUser = await User.findOne({ email });
 
@@ -16,6 +17,7 @@ const forgotPasswordController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Email does not exist",
+        typeError: "email",
       });
 
     existUser.resetPasswordToken = crypto.randomBytes(32).toString("hex");
@@ -34,6 +36,7 @@ const forgotPasswordController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
+      typeError: "email",
     });
   }
 };

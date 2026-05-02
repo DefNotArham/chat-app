@@ -5,56 +5,23 @@ import { MdError } from "react-icons/md";
 import { Oval } from "react-loader-spinner";
 
 import AuthPages from "../../Components/AuthPages";
+import useAuthStore from "../../Stores/Auth.Store";
 
 const RegisterPage = () => {
+  const { register, loading, error, errorType } = useAuthStore();
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [DOB, setDOB] = useState("");
   const [displayName, setDisplayName] = useState("");
 
-  const [errorMsg, setErrorMsg] = useState("");
-  const [errorType, setErrorType] = useState("");
-
-  const [isLoading, setIsloading] = useState(false);
-
   const navigate = useNavigate();
 
   const handleCreateAccount = async () => {
-    setIsloading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/register",
-        {
-          email: email.trim(),
-          username: username.trim(),
-          password,
-          DOB,
-          displayName: displayName.trim() || username.trim(),
-        },
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        navigate("/verify-email");
-        setIsloading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMsg(error?.response?.data.message || "Server error");
-      setErrorType(error?.response?.data.typeError || "general");
-      setIsloading(false);
-
-      setTimeout(() => {
-        setErrorMsg("");
-        setErrorType("");
-      }, 3000);
-    }
-  };
-
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
-      handleCreateAccount();
+    const result = await register(email, username, password, DOB, displayName);
+    if (result.success) {
+      navigate("/verify-email");
     }
   };
 
@@ -64,7 +31,7 @@ const RegisterPage = () => {
       {errorType === "general" ? (
         <p className="text-discord-danger text-sm mt-2 ml-2 font-bold flex items-center gap-1">
           <MdError />
-          {errorMsg}
+          {error}
         </p>
       ) : (
         ""
@@ -74,7 +41,7 @@ const RegisterPage = () => {
         className="w-full mt-5 flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
-          handleEnter();
+          handleCreateAccount();
         }}
       >
         <div className="flex flex-col items-start">
@@ -91,12 +58,11 @@ const RegisterPage = () => {
             }`}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            onKeyDown={handleEnter}
           />
           {errorType === "email" ? (
             <p className="text-discord-danger text-xs mt-2 ml-2 font-bold flex items-center gap-1">
               <MdError />
-              {errorMsg}
+              {error}
             </p>
           ) : (
             ""
@@ -121,7 +87,7 @@ const RegisterPage = () => {
           {errorType === "username" ? (
             <p className="text-discord-danger text-xs mt-2 ml-2 font-bold flex items-center gap-1">
               <MdError />
-              {errorMsg}
+              {error}
             </p>
           ) : (
             ""
@@ -144,7 +110,7 @@ const RegisterPage = () => {
           {errorType === "displayName" ? (
             <p className="text-discord-danger text-xs mt-2 ml-2 font-bold flex items-center gap-1">
               <MdError />
-              {errorMsg}
+              {error}
             </p>
           ) : (
             ""
@@ -170,7 +136,7 @@ const RegisterPage = () => {
           {errorType === "password" ? (
             <p className="text-discord-danger text-xs mt-2 ml-2 font-bold flex items-center gap-1">
               <MdError />
-              {errorMsg}
+              {error}
             </p>
           ) : (
             ""
@@ -202,45 +168,45 @@ const RegisterPage = () => {
           {errorType === "dob" ? (
             <p className="text-discord-danger text-xs mt-2 ml-2 font-bold flex items-center gap-1">
               <MdError />
-              {errorMsg}
+              {error}
             </p>
           ) : (
             ""
           )}
         </div>
-      </form>
 
-      <div className="w-full mt-7 flex flex-col items-center text-center">
-        <button
-          className="bg-discord-blurple hover:bg-discord-blurple-hover w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer flex items-center justify-center transition-colors"
-          onClick={handleCreateAccount}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <Oval
-              height={26}
-              width={26}
-              color="#ffffff"
-              visible={true}
-              ariaLabel="oval-loading"
-              secondaryColor="#ffffff"
-              strokeWidth={7}
-              strokeWidthSecondary={5}
-            />
-          ) : (
-            "Create account"
-          )}
-        </button>
-        <p className="mt-3 text-discord-muted">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="underline text-discord-blurple hover:text-discord-blurple-hover"
+        <div className="w-full mt-7 flex flex-col items-center text-center">
+          <button
+            className="bg-discord-blurple hover:bg-discord-blurple-hover w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer flex items-center justify-center transition-colors"
+            type="submit"
+            disabled={loading}
           >
-            Login
-          </Link>
-        </p>
-      </div>
+            {loading ? (
+              <Oval
+                height={26}
+                width={26}
+                color="#ffffff"
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="#ffffff"
+                strokeWidth={7}
+                strokeWidthSecondary={5}
+              />
+            ) : (
+              "Create account"
+            )}
+          </button>
+          <p className="mt-3 text-discord-muted">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="underline text-discord-blurple hover:text-discord-blurple-hover"
+            >
+              Login
+            </Link>
+          </p>
+        </div>
+      </form>
     </AuthPages>
   );
 };

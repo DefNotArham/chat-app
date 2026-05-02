@@ -17,96 +17,72 @@ import ServerSettings from "./pages/app/ServerSettings";
 
 import LoadingUi from "./Components/LoadingUi";
 
-const App = () => {
-  const [isAuthentication, setIsAuthentication] = useState(false);
-  const [user, setUser] = useState(null);
+const ProtectedRoutes = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuthStore();
+  if (loading) return children;
+  if (!isAuthenticated || !user?.isVerified) {
+    return <Navigate to="/login" replace />;
+  }
 
-  const [loading, setLoading] = useState(true);
+  return children;
+};
+const RedirectAuthenticatedUser = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuthStore();
+  if (loading) return children;
+
+  if (isAuthenticated && user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
+const ProtectedSettingsRoutes = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuthStore();
+  const { serverId } = useParams();
+  const [server, setServer] = useState(null);
+
+  const [checkingServer, setCheckingServer] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const fetchdata = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:8000/auth/checkAuth",
-          {},
+        const response = await axios.get(
+          `http://localhost:8000/server/load-server/${serverId}`,
           { withCredentials: true },
         );
 
         if (response.data.success) {
-          setIsAuthentication(true);
-          setUser(response?.data.user);
-        } else {
-          setIsAuthentication(false);
-          setUser(null);
+          setServer(response.data.server);
         }
       } catch (error) {
         console.log(error);
-        setIsAuthentication(false);
-        setUser(null);
       } finally {
-        setLoading(false);
+        setCheckingServer(false);
       }
     };
 
+    fetchdata();
+  }, [serverId]);
+
+  if (loading || checkingServer) return null;
+
+  if (!isAuthenticated || !user?.isVerified) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!server || server?.owner !== user?._id) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
+const App = () => {
+  const { checkAuth } = useAuthStore();
+  useEffect(() => {
     checkAuth();
   }, []);
-
-  const ProtectedRoutes = ({ children }) => {
-    if (loading) return null;
-    if (!isAuthentication || !user?.isVerified) {
-      return <Navigate to="/login" replace />;
-    }
-
-    return children;
-  };
-  const RedirectAuthenticatedUser = ({ children }) => {
-    if (loading) return null;
-    if (isAuthentication) {
-      return <Navigate to="/" replace />;
-    }
-
-    return children;
-  };
-
-  const ProtectedSettingsRoutes = ({ children }) => {
-    const { serverId } = useParams();
-    const [server, setServer] = useState(null);
-
-    const [checkingServer, setCheckingServer] = useState(true);
-
-    useEffect(() => {
-      const fetchdata = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:8000/server/load-server/${serverId}`,
-            { withCredentials: true },
-          );
-
-          if (response.data.success) {
-            setServer(response.data.server);
-          }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setCheckingServer(false);
-        }
-      };
-
-      fetchdata();
-    }, [serverId]);
-
-    if (loading || checkingServer) return null;
-
-    if (!isAuthentication || !user?.isVerified) {
-      return <Navigate to="/login" replace />;
-    }
-
-    if (!server || server.owner !== user._id) {
-      return <Navigate to="/" replace />;
-    }
-
-    return children;
-  };
 
   return (
     <Routes>
@@ -116,14 +92,12 @@ const App = () => {
         path="/"
         element={
           <ProtectedRoutes>
-            <DirectMessagePage
-              user={user}
-              setUser={setUser}
-              setIsAuthentication={setIsAuthentication}
-            />
+            <DirectMessagePage />
           </ProtectedRoutes>
         }
       />
+
+      {/* 
 
       <Route
         path="/settings"
@@ -167,7 +141,7 @@ const App = () => {
             </ProtectedSettingsRoutes>
           </ProtectedRoutes>
         }
-      />
+      /> */}
 
       {/* Auth pages */}
 
@@ -179,28 +153,20 @@ const App = () => {
           </RedirectAuthenticatedUser>
         }
       />
-
       <Route
-        path="/login"
+        path="/verify-email"
         element={
           <RedirectAuthenticatedUser>
-            <LoginPage
-              setIsAuthentication={setIsAuthentication}
-              setUser={setUser}
-              user={user}
-            />
+            <VerificationPage />
           </RedirectAuthenticatedUser>
         }
       />
 
       <Route
-        path="/verify-email"
+        path="/login"
         element={
           <RedirectAuthenticatedUser>
-            <VerificationPage
-              isAuthentication={isAuthentication}
-              setIsAuthentication={setIsAuthentication}
-            />
+            <LoginPage />
           </RedirectAuthenticatedUser>
         }
       />

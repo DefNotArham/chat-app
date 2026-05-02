@@ -6,51 +6,20 @@ import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 
 import AuthPages from "../../Components/AuthPages";
+import useAuthStore from "../../Stores/Auth.Store";
 
 const ResetPasswordPage = () => {
+  const { loading, error, resetPassword } = useAuthStore();
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { token } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleResetPassword = async () => {
-    setIsLoading(true);
-    if (!newPassword || !confirmNewPassword) {
-      setError("All fields are required");
-      setIsLoading(false);
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
-    }
-    if (newPassword !== confirmNewPassword) {
-      setError("Password does not match");
-      setIsLoading(false);
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/auth/reset-password/${token}`,
-        { password: newPassword.trim() },
-        { withCredentials: true },
-      );
-      if (response.data.success) {
-        setSuccess("Password changed successfully");
-        setError("");
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-      setError(error?.response?.data?.message || "Server error");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
+    const result = await resetPassword(token, newPassword, confirmNewPassword);
+    if (result?.success) {
+      setSuccess("Password changed successfully");
     }
   };
 
@@ -109,10 +78,10 @@ const ResetPasswordPage = () => {
           </div>
           <button
             onClick={handleResetPassword}
-            disabled={isLoading}
+            disabled={loading}
             className="bg-discord-blurple hover:bg-discord-blurple-hover w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer mt-3 flex items-center justify-center transition-colors"
           >
-            {isLoading ? (
+            {loading ? (
               <Oval
                 height={26}
                 width={26}

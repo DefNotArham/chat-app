@@ -6,92 +6,37 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Oval } from "react-loader-spinner";
 
 import AuthPages from "../../Components/AuthPages";
+import useAuthStore from "../../Stores/Auth.Store";
 
-const LoginPage = ({ setIsAuthentication, setUser, user }) => {
+const LoginPage = () => {
+  const { login, loading, forgotPassword, loadServer, error, errorType } =
+    useAuthStore();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errorMsg, setErrorMsg] = useState("");
-  const [errorType, setErrorType] = useState("");
-
   const [forgotPassSucess, setForgotPassSuccess] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const loadServers = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/checkAuth",
-        {},
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await loadServer();
   };
 
   const handleLogin = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/login",
-        {
-          email: email.trim(),
-          password,
-        },
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        setUser(response.data.user);
-        setIsAuthentication(true);
-        setIsLoading(false);
-        loadServers();
-        navigate("/");
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMsg(error?.response?.data.message || "Server error");
-      setErrorType(error?.response?.data.typeError || "general");
-      setIsLoading(false);
-
-      setTimeout(() => {
-        setErrorMsg("");
-        setErrorType("");
-      }, 3000);
+    const result = await login(email, password);
+    if (result.success) {
+      navigate("/");
+      loadServers();
     }
   };
 
   const handleForgotPassword = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/forgot-password",
-        { email: email.trim() },
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        setForgotPassSuccess(true);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMsg(error.response.data.message);
-      setErrorType("email");
+    const result = await forgotPassword(email);
+    if (result.success) {
+      setForgotPassSuccess(true);
+    } else {
       setForgotPassSuccess(false);
-      setIsLoading(false);
-
-      setTimeout(() => {
-        setErrorMsg("");
-        setErrorType("");
-      }, 3000);
     }
   };
 
@@ -110,7 +55,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
         {errorType === "general" && (
           <p className="text-discord-danger text-sm mt-2 ml-2 font-bold flex items-center gap-1">
             <MdError />
-            {errorMsg}
+            {error}
           </p>
         )}
       </div>
@@ -137,7 +82,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             value={email}
           />
           {errorType === "email" && (
-            <p className="text-discord-danger text-sm mt-1">{errorMsg}</p>
+            <p className="text-discord-danger text-sm mt-1">{error}</p>
           )}
         </div>
 
@@ -157,7 +102,7 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
             value={password}
           />
           {errorType === "password" && (
-            <p className="text-discord-danger text-sm mt-1">{errorMsg}</p>
+            <p className="text-discord-danger text-sm mt-1">{error}</p>
           )}
           <a
             onClick={handleForgotPassword}
@@ -171,9 +116,9 @@ const LoginPage = ({ setIsAuthentication, setUser, user }) => {
           <button
             onClick={handleLogin}
             className="bg-discord-blurple hover:bg-discord-blurple-hover w-[80%] py-4 rounded-xl text-sm text-white cursor-pointer flex justify-center items-center transition-all duration-200"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? (
+            {loading ? (
               <Oval
                 height={26}
                 width={26}

@@ -5,17 +5,26 @@ import { resetPasswordSucessEmail } from "../../mail/mailjet.js";
 const resetPasswordController = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
+  const { confirmPassword } = req.body;
 
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordTokenExpiresAt: { $gt: Date.now() },
+      resetPasswordTokenExpiresAt: { $gt: new Date() },
     });
 
     if (!user)
       return res.status(400).json({
         success: false,
         message: "Invalid token or expired token",
+        typeError: "general",
+      });
+
+    if (password !== confirmPassword)
+      return res.status(400).json({
+        success: false,
+        message: "Password does not match",
+        typeError: "resetpassword",
       });
 
     const isSamePassword = await bcrypt.compare(password, user.password);
@@ -24,6 +33,7 @@ const resetPasswordController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "New password cannot be the same as your current password",
+        typeError: "resetpassword",
       });
 
     // Password errors
@@ -37,7 +47,7 @@ const resetPasswordController = async (req, res) => {
     if (!/\d/.test(password))
       return res.status(400).json({
         success: false,
-        messsage: "Password must include atleast one number",
+        message: "Password must include atleast one number",
         typeError: "password",
       });
 

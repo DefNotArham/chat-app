@@ -23,7 +23,7 @@ const LoadingUi = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            Loading channel...
+            Loading...
           </motion.p>
         </div>
       </div>
