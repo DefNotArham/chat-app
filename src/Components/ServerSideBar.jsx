@@ -11,15 +11,20 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { IoAddCircle } from "react-icons/io5";
 import { IoIosExit } from "react-icons/io";
 import { IoCreate } from "react-icons/io5";
+import useAuthStore from "../Stores/Auth.Store";
+import useServerStore from "../Stores/Server.Store";
+import useChannelStore from "../Stores/Channel.Store";
 
 const ServerSideBar = ({
-  server,
   setInviteToServerPopUp,
-  setUser,
   setLeaveConfirmPopup,
-  user,
   setChannelPopup,
 }) => {
+  const { user } = useAuthStore();
+  const { currentServer } = useServerStore();
+
+  const { loadChannels, channels } = useChannelStore();
+
   const [serverSetting, setServerSetting] = useState(false);
 
   const serverSettingsRef = useRef(null);
@@ -28,21 +33,27 @@ const ServerSideBar = ({
 
   const navigate = useNavigate();
 
-  const loadServers = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/checkAuth",
-        {},
-        { withCredentials: true },
-      );
-
-      if (response.data.success) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (serverId) {
+      loadChannels(serverId);
     }
-  };
+  }, [serverId]);
+
+  // const loadServers = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:8000/auth/checkAuth",
+  //       {},
+  //       { withCredentials: true },
+  //     );
+
+  //     if (response.data.success) {
+  //       setUser(response.data.user);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     let handler = (e) => {
@@ -59,22 +70,22 @@ const ServerSideBar = ({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleDeleteChannel = async (channelId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8000/server/channel/delete-channel/${serverId}/channel/${channelId}`,
-        { withCredentials: true },
-      );
+  // const handleDeleteChannel = async (channelId) => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `http://localhost:8000/server/channel/delete-channel/${serverId}/channel/${channelId}`,
+  //       { withCredentials: true },
+  //     );
 
-      if (response.data.success) {
-        loadServers();
-        setChannelSetting(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setChannelSetting(false);
-    }
-  };
+  //     if (response.data.success) {
+  //       loadServers();
+  //       setChannelSetting(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setChannelSetting(false);
+  //   }
+  // };
 
   return (
     <div className="bg-[#2b2d31] w-[200px] md:w-[280px]  h-screen ml-[70px] fixed left-0 top-0 flex flex-col z-40">
@@ -87,7 +98,7 @@ const ServerSideBar = ({
         >
           <h1 className="text-white truncate max-w-[180px]">
             {" "}
-            {server?.name ?? "Loading..."}
+            {currentServer?.name ?? "Loading..."}
           </h1>
           <FaChevronDown className="" />
         </div>
@@ -110,7 +121,7 @@ const ServerSideBar = ({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2 }}
           >
-            {server?.owner?.toString() === user?._id ? (
+            {currentServer?.owner?.toString() === user?._id ? (
               <>
                 <button
                   className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#5865f2] transition cursor-pointer flex items-center justify-between gap-3 group"
@@ -173,26 +184,27 @@ const ServerSideBar = ({
 
       <div className="overflow-y-auto h-[85%]">
         <div className="flex flex-col gap-3 mt-10 px-2">
-          {server?.channels?.map((c) => (
+          {channels?.map((c) => (
             <div
               key={c?._id}
               className="text-[#b5bac1] bg-[#3c3f44] hover:text-white transition-all flex items-center gap-2 hover:bg-[#383a40] px-3 rounded-lg h-9 text-sm cursor-pointer w-full"
             >
               <p
                 onClick={() => {
-                  navigate(`/server/${server?._id}/channel/${c?._id}`);
+                  navigate(`/server/${currentServer?._id}/channel/${c?._id}`);
                 }}
                 className="truncate flex-1"
               >
                 {c?.name}
               </p>
-              {server?.owner?.toString() === user?._id ? (
+              {currentServer?.owner?.toString() === user?._id ? (
                 <IoSettingsSharp
                   className="shrink-0"
                   size={16}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     navigate(
-                      `/server/${server?._id}/channel/${c?._id}/settings`,
+                      `/server/${currentServer?._id}/channel/${c?._id}/settings`,
                     );
                   }}
                 />
@@ -200,7 +212,8 @@ const ServerSideBar = ({
                 <RiUserAddFill
                   className="cursor-pointer"
                   size={16}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setInviteToServerPopUp(true);
                   }}
                 />

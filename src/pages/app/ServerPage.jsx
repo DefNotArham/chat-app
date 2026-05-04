@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
@@ -9,6 +9,7 @@ import ServerSideBar from "../../Components/ServerSideBar";
 import { PiWarningFill } from "react-icons/pi";
 import useAuthStore from "../../Stores/Auth.Store";
 import useServerStore from "../../Stores/Server.Store";
+import useChannelStore from "../../Stores/Channel.Store";
 
 const ServerPage = () => {
   const { user } = useAuthStore();
@@ -16,9 +17,17 @@ const ServerPage = () => {
     currentServer,
     loadCurrentServer,
     serverError,
-    errorType,
+    errorType: serverErrorType,
     leaveServer,
   } = useServerStore();
+
+  const {
+    loadChannels,
+    createChannel,
+    errorType: channelErrorType,
+    loadingCreate,
+    channelError,
+  } = useChannelStore();
 
   const { serverId } = useParams();
 
@@ -29,6 +38,13 @@ const ServerPage = () => {
   const [channelPopup, setChannelPopup] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (serverId) {
+      loadCurrentServer(serverId);
+      loadChannels(serverId);
+    }
+  }, [serverId]);
 
   // const loadServers = async () => {
   //   try {
@@ -45,10 +61,6 @@ const ServerPage = () => {
   //     console.log(error);
   //   }
   // };
-
-  useEffect(() => {
-    loadCurrentServer(serverId);
-  }, [serverId]);
 
   const inviteCodeRef = useRef(null);
 
@@ -133,26 +145,35 @@ const ServerPage = () => {
     }
   };
 
+  // const handleCreateChannel = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:8000/server/channel/create-channel/${serverId}`,
+  //       { channelName: newChannel.trim() },
+  //       { withCredentials: true },
+  //     );
+
+  //     if (response.data.success) {
+  //       loadServers();
+  //       setChannelPopup(false);
+  //     }
+  //   } catch (error) {
+  //     setError(error?.response?.data.message);
+  //     setErrorType("createChannel");
+
+  //     setTimeout(() => {
+  //       setError("");
+  //       setErrorType("");
+  //     }, 3000);
+  //   }
+  // };
+
   const handleCreateChannel = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/server/channel/create-channel/${serverId}`,
-        { channelName: newChannel.trim() },
-        { withCredentials: true },
-      );
+    const result = await createChannel(serverId, newChannel);
 
-      if (response.data.success) {
-        loadServers();
-        setChannelPopup(false);
-      }
-    } catch (error) {
-      setError(error?.response?.data.message);
-      setErrorType("createChannel");
-
-      setTimeout(() => {
-        setError("");
-        setErrorType("");
-      }, 3000);
+    if (result.success) {
+      setChannelPopup(false);
+      setNewChannel("");
     }
   };
 
@@ -166,11 +187,8 @@ const ServerPage = () => {
     <>
       <Sidebar />
       <ServerSideBar
-        server={server}
         setInviteToServerPopUp={setInviteToServerPopUp}
-        setUser={setUser}
         setLeaveConfirmPopup={setLeaveConfirmPopup}
-        user={user}
         setChannelPopup={setChannelPopup}
       />
 
@@ -209,7 +227,7 @@ const ServerPage = () => {
               </p>
 
               <div className="bg-discord-input p-2 rounded-lg text-center text-white">
-                {server?.inviteCode ?? "Loading..."}
+                {currentServer?.inviteCode ?? "Loading..."}
               </div>
 
               <button
@@ -246,7 +264,7 @@ const ServerPage = () => {
                   Are you sure you want to leave the server?
                 </h2>
 
-                {error && errorType === "leaveServer" && (
+                {serverError && serverErrorType === "leaveServer" && (
                   <motion.div
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -308,7 +326,7 @@ const ServerPage = () => {
                 onKeyDown={(e) => handleCreateChannelKey(e)}
               />
 
-              {error && errorType === "createChannel" && (
+              {channelError && channelErrorType === "createChannel" && (
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}

@@ -15,6 +15,7 @@ const createChannelController = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Channel name is required",
+        typeError: "createChannel",
       });
     }
 
@@ -36,6 +37,7 @@ const createChannelController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Channel created successfully",
+      channel: newChannel,
     });
   } catch (error) {
     console.log(error);

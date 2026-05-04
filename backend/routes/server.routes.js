@@ -13,6 +13,7 @@ import createChannelController from "../controllers/channelControllers/createCha
 import deleteChannelController from "../controllers/channelControllers/deleteChannel.controller.js";
 import loadChannelController from "../controllers/channelControllers/loadChannel.controller.js";
 import editChannelController from "../controllers/channelControllers/editChannelName.controller.js";
+import getChannelsController from "../controllers/channelControllers/getChannels.controller.js";
 
 const router = express.Router();
 
@@ -45,6 +46,12 @@ router.post(
   "/channel/edit-channelName/:serverId/channel/:channelId",
   verifyToken,
   editChannelController,
+);
+
+router.get(
+  "/channel/get-channels/:serverId",
+  verifyToken,
+  getChannelsController,
 );
 
 export default router;

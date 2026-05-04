@@ -420,7 +420,7 @@ const Sidebar = () => {
           </div>
 
           <div className="">
-            <h1 className="text-white">{user.displayName}</h1>
+            <h1 className="text-white">{user?.displayName}</h1>
             <p className="text-xs text-discord-muted relative h-4 w-23">
               <span
                 className={`absolute transition-opacity duration-300 ${
@@ -435,7 +435,7 @@ const Sidebar = () => {
                   isHovering ? "opacity-100" : "opacity-0"
                 }`}
               >
-                {user.username}
+                {user?.username}
               </span>
             </p>
           </div>
