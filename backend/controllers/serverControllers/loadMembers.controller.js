@@ -14,7 +14,9 @@ const loadMembersController = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Server not found" });
 
-    const isMember = server.members.some((m) => m._id === req.userId);
+    const isMember = server.members.some(
+      (m) => m._id.toString() === req.userId,
+    );
 
     if (!isMember)
       return res

@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdDeleteForever } from "react-icons/md";
 import useServerStore from "../../Stores/Server.Store";
+import { useParams } from "react-router-dom";
 
 const ServerSettings = () => {
-  const { currentServer } = useServerStore();
+  const { currentServer, loadMembers, members, loadingMembers } =
+    useServerStore();
 
   const [tab, setTab] = useState("overview");
+
+  const { serverId } = useParams();
+
+  const [serverName, setServerName] = useState(currentServer?.name);
+
+  useEffect(() => {
+    loadMembers(serverId);
+  }, [serverId]);
 
   return (
     <div className="min-h-screen w-full bg-discord-bg text-white flex">
@@ -58,10 +68,8 @@ const ServerSettings = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-10">
         <AnimatePresence mode="wait">
-          {/* Overview */}
           {tab === "overview" && (
             <motion.div
               key="overview"
@@ -80,6 +88,8 @@ const ServerSettings = () => {
                   type="text"
                   className="w-full mt-2 px-3 py-2 bg-discord-input rounded-md outline-none focus:border-discord-blurple border border-transparent"
                   placeholder="Enter server name"
+                  value={serverName}
+                  onChange={(e) => setServerName(e.target.value)}
                 />
               </div>
             </motion.div>
@@ -95,9 +105,42 @@ const ServerSettings = () => {
               <h1 className="text-xl font-semibold mb-6">Members</h1>
 
               <div className="bg-discord-deep p-4 rounded-lg">
-                {currentServer.members.map((m) => (
-                  <p>{m}</p>
-                ))}
+                {loadingMembers ? (
+                  <p className="text-discord-muted text-sm">
+                    Loading members...
+                  </p>
+                ) : members?.length === 0 ? (
+                  <p className="text-discord-muted text-sm">No members found</p>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {members?.map((m) => (
+                      <div
+                        key={m._id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-discord-blurple flex items-center justify-center text-sm font-bold">
+                            {m.displayName?.[0]?.toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">
+                              {m.displayName}
+                            </p>
+                            <p className="text-xs text-discord-muted">
+                              @{m.username}
+                            </p>
+                          </div>
+                        </div>
+
+                        {currentServer?.owner !== m._id && (
+                          <button className="text-xs text-discord-danger hover:underline cursor-pointer">
+                            Kick
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

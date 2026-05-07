@@ -4,6 +4,7 @@ import axios from "axios";
 const useServerStore = create((set) => ({
   // Server
   servers: [],
+  members: [],
   currentServer: null,
 
   // Loading
@@ -11,6 +12,7 @@ const useServerStore = create((set) => ({
   loadingCreate: false,
   loadingJoin: false,
   loadingServer: false,
+  loadingMembers: false,
 
   // Error
   serverError: "",
@@ -27,6 +29,27 @@ const useServerStore = create((set) => ({
     } catch (error) {
       console.log(error);
       set({ loading: false });
+    }
+  },
+
+  loadMembers: async (serverId) => {
+    set({ loadingMembers: true });
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/server/get-members/${serverId}`,
+        { withCredentials: true },
+      );
+      console.log(response.data);
+
+      if (response?.data?.success) {
+        set({
+          members: response?.data?.members,
+          loadingMembers: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      set({ loadingMembers: false });
     }
   },
 
