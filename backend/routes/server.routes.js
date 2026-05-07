@@ -9,6 +9,7 @@ import leaveServerController from "../controllers/serverControllers/leaveServer.
 import getServersController from "../controllers/serverControllers/getServers.controller.js";
 import loadMembersController from "../controllers/serverControllers/loadMembers.controller.js";
 import editServerName from "../controllers/serverControllers/editServerName.controller.js";
+import deleteServerController from "../controllers/serverControllers/deleteServer.controller.js";
 
 // Channel
 import createChannelController from "../controllers/channelControllers/createChannel.controller.js";
@@ -26,6 +27,7 @@ router.post("/leave-server/:serverId", verifyToken, leaveServerController);
 router.get("/get-servers", verifyToken, getServersController);
 router.get("/get-members/:serverId", verifyToken, loadMembersController);
 router.patch("/editServername/:serverId", verifyToken, editServerName);
+router.delete("/delete-server", verifyToken, deleteServerController);
 
 // channels
 router.post(
