@@ -83,6 +83,15 @@ const App = () => {
       />
 
       <Route
+        path="/server/:serverId/channel/:channelId"
+        element={
+          <ProtectedRoutes>
+            <ServerPage />
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
         path="/settings"
         element={
           <ProtectedRoutes>

@@ -5,6 +5,8 @@ import axios from "axios";
 
 import Sidebar from "../../Components/Sidebar";
 import ServerSideBar from "../../Components/ServerSideBar";
+import MessageInput from "../../Components/MessageInput";
+import ServerMembers from "../../Components/ServerMembers";
 
 import { PiWarningFill } from "react-icons/pi";
 import useAuthStore from "../../Stores/Auth.Store";
@@ -27,9 +29,12 @@ const ServerPage = () => {
     errorType: channelErrorType,
     loadingCreate,
     channelError,
+    currentChannel,
+    loadingChannel,
   } = useChannelStore();
 
   const { serverId } = useParams();
+  const { channelId } = useParams();
 
   const [inviteToServerPopUp, setInviteToServerPopUp] = useState(false);
   const [leaveConfirmPopup, setLeaveConfirmPopup] = useState(false);
@@ -129,15 +134,21 @@ const ServerPage = () => {
         setChannelPopup={setChannelPopup}
       />
 
-      {/* <Sidebar setUser={setUser} user={user} />
-      <ServerSideBar
-        server={server}
-        setInviteToServerPopUp={setInviteToServerPopUp}
-        setUser={setUser}
-        setLeaveConfirmPopup={setLeaveConfirmPopup}
-        user={user}
-        setChannelPopup={setChannelPopup}
-      /> */}
+      {!channelId ? (
+        <div className="ml-70 flex justify-center items-center h-screen">
+          <h1 className="text-white text-4xl font-bold text-center">
+            Welcome to {currentServer?.name}
+          </h1>
+        </div>
+      ) : (
+        <div className="ml-90 flex justify-between h-screen">
+          <div className="flex flex-col justify-between w-screen">
+            <div></div>
+            <MessageInput />
+          </div>
+          <ServerMembers />
+        </div>
+      )}
 
       {/* Invite to Server popup */}
       <AnimatePresence>

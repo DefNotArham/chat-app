@@ -162,7 +162,7 @@ const ServerSideBar = ({
                 }}
                 className="truncate flex-1"
               >
-                {c?.name}
+                #{c?.name}
               </p>
               {currentServer?.owner?.toString() === user?._id ? (
                 <IoSettingsSharp
