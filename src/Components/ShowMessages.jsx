@@ -1,11 +1,19 @@
 import { useParams } from "react-router-dom";
 import socket from "../socket/socket.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 const ShowMessages = () => {
   const { channelId } = useParams();
   const [messages, setMessages] = useState([]);
+
+  const bottomRef = useRef(null);
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     if (!channelId) return;
@@ -48,6 +56,8 @@ const ShowMessages = () => {
           </p>
         </div>
       ))}
+
+      <div ref={bottomRef} />
     </div>
   );
 };
