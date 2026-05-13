@@ -3,7 +3,7 @@ import User from "../../model/user.model.js";
 const declineAddFriendController = async (req, res) => {
   try {
     const userId = req.userId;
-    const { senderId } = req.body;
+    const { targetUsername } = req.body;
 
     if (!userId || !senderId)
       return res
