@@ -134,7 +134,6 @@ const ServerPage = () => {
         setLeaveConfirmPopup={setLeaveConfirmPopup}
         setChannelPopup={setChannelPopup}
       />
-
       {!channelId ? (
         <div className="ml-70 flex justify-center items-center h-screen">
           <h1 className="text-white text-4xl font-bold text-center">
@@ -150,7 +149,6 @@ const ServerPage = () => {
           <ServerMembers />
         </div>
       )}
-
       {/* Invite to Server popup */}
       <AnimatePresence>
         {inviteToServerPopUp && (
@@ -189,7 +187,6 @@ const ServerPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Leave server confirm popup */}
       <AnimatePresence>
         {leaveConfirmPopup ? (
@@ -246,7 +243,6 @@ const ServerPage = () => {
           </>
         ) : null}
       </AnimatePresence>
-
       {/* Create channel popup */}
       <AnimatePresence>
         {channelPopup && (
