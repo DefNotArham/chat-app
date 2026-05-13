@@ -9,7 +9,9 @@ import connectDb from "./db/connectDb.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import serverRoutes from "./routes/server.routes.js";
-import Server from "./model/server.model.js";
+import messageRoutes from "./routes/message.routes.js";
+
+import Message from "./model/message.model.js";
 
 dotenv.config();
 const app = express();
@@ -37,6 +39,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/server", serverRoutes);
+app.use("/message", messageRoutes);
 
 io.on("connection", (socket) => {
   console.log("User connected");
@@ -53,8 +56,25 @@ io.on("connection", (socket) => {
     socket.leave(channelId);
   });
 
-  socket.on("send_message", (messageData) => {
-    io.to(messageData.channelId).emit("receive_message", messageData);
+  socket.on("send_message", async (messageData) => {
+    try {
+      const message = new Message({
+        channelId: messageData.channelId,
+        content: messageData.content,
+        sender: messageData.user,
+      });
+
+      await message.save();
+
+      const populatedMessage = await Message.findById(message._id).populate(
+        "sender",
+        "username",
+      );
+
+      io.to(messageData.channelId).emit("receive_message", populatedMessage);
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 

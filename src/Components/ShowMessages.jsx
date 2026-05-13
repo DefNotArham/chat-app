@@ -1,22 +1,34 @@
 import { useParams } from "react-router-dom";
 import socket from "../socket/socket.js";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ShowMessages = () => {
   const { channelId } = useParams();
-  const { serverId } = useParams();
-  const [messages, SetMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (!channelId) return;
 
     const handleReceiveMessage = (messageData) => {
-      SetMessages((prev) => [...prev, messageData]);
+      setMessages((prev) => [...prev, messageData]);
     };
 
-    SetMessages([]);
-    socket.emit("join_channel", channelId);
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/message/getMessages/${channelId}`,
+        );
+        setMessages(response.data.messages);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    setMessages([]);
+    fetchMessages();
+
+    socket.emit("join_channel", channelId);
     socket.on("receive_message", handleReceiveMessage);
 
     return () => {
@@ -27,10 +39,13 @@ const ShowMessages = () => {
 
   return (
     <div className="flex flex-col gap-2 p-4">
-      {messages.map((m, index) => (
-        <div key={index} className="text-white">
-          <span className="font-bold">{m.user?.username || "Unknown"}:</span>{" "}
+      {messages.map((m) => (
+        <div key={m._id} className="text-white">
+          <span className="font-bold">{m.sender?.username || "Unknown"}:</span>{" "}
           {m.content}
+          <p className="text-xs text-gray-400">
+            {new Date(m.createdAt).toLocaleTimeString()}
+          </p>
         </div>
       ))}
     </div>

@@ -6,7 +6,11 @@ const serverSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "user" },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "user",
+  },
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
