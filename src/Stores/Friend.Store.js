@@ -79,9 +79,6 @@ const useFriendStore = create((set) => ({
       if (response?.data?.success) {
         set((state) => ({
           friends: [...state.friends, response?.data?.newFriend],
-        }));
-
-        set((state) => ({
           friendRequests: state.friendRequests.filter(
             (req) => req._id.toString() !== senderId.toString(),
           ),
@@ -103,7 +100,7 @@ const useFriendStore = create((set) => ({
 
   loadFriends: async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         "http://localhost:8000/friend/get-friends",
         { withCredentials: true },
       );

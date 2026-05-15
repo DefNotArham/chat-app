@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { RiChatUnreadFill } from "react-icons/ri";
 import useFriendStore from "../Stores/Friend.Store";
 
 const DirectMessageSidebar = ({ mainTab, setMainTab }) => {
-  const { friends } = useFriendStore();
+  const { friends, loadFriends } = useFriendStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await loadFriends();
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-discord-sidebar w-[200px] md:w-[280px] h-screen ml-[70px] fixed left-0 top-0 flex flex-col justify-between z-40 border-r border-gray-700 pt-2">
