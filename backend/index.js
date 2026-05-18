@@ -13,6 +13,7 @@ import messageRoutes from "./routes/message.routes.js";
 import friendRoutes from "./routes/friend.routes.js";
 
 import Message from "./model/message.model.js";
+import DM from "./model/dm.model.js";
 
 dotenv.config();
 const app = express();
@@ -50,6 +51,7 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 
+  // Channel chat
   socket.on("join_channel", (channelId) => {
     socket.join(channelId);
   });
@@ -65,15 +67,42 @@ io.on("connection", (socket) => {
         content: messageData.content,
         sender: messageData.user,
       });
-
       await message.save();
-
       const populatedMessage = await Message.findById(message._id).populate(
         "sender",
         "username",
       );
-
       io.to(messageData.channelId).emit("receive_message", populatedMessage);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // Private DMs
+  socket.on("privateDm", ({ userId, friendId }) => {
+    const roomId = [userId, friendId].sort().join("_");
+    socket.join(roomId);
+  });
+
+  socket.on("leavePrivateDm", ({ userId, friendId }) => {
+    const roomId = [userId, friendId].sort().join("_");
+    socket.leave(roomId);
+  });
+
+  socket.on("sendDmMessage", async (DmData) => {
+    try {
+      const dm = new DM({
+        to: DmData.to,
+        from: DmData.from._id,
+        content: DmData.content,
+      });
+      await dm.save();
+      const populatedDm = await DM.findById(dm._id)
+        .populate("to", "username displayName")
+        .populate("from", "username displayName");
+
+      const roomId = [DmData.from._id, DmData.to].sort().join("_");
+      io.to(roomId).emit("receiveDM", populatedDm);
     } catch (error) {
       console.log(error);
     }
