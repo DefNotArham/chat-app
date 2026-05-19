@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoSend } from "react-icons/io5";
 import socket from "../../socket/socket.js";
 import useAuthStore from "../../Stores/Auth.Store.js";
@@ -13,6 +13,14 @@ const PrivateMessage = () => {
   const [messageInput, setMessageInput] = useState("");
 
   const { friendId } = useParams();
+
+  const bottomRef = useRef(null);
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [dm]);
 
   useEffect(() => {
     const fetchDm = async () => {
@@ -94,6 +102,7 @@ const PrivateMessage = () => {
             </div>
           );
         })}
+        <div ref={bottomRef} />
       </div>
 
       {/* Input */}
