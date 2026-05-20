@@ -1,7 +1,9 @@
 import useServerStore from "../../Stores/Server.Store";
 import { FaCrown } from "react-icons/fa6";
 
-const ServerMembers = () => {
+import { useState } from "react";
+
+const ServerMembers = ({ selectedUser, setSelectedUser }) => {
   const { currentServer } = useServerStore();
 
   return (
@@ -17,7 +19,10 @@ const ServerMembers = () => {
             key={m._id}
             className="flex items-center gap-2 p-2 rounded hover:bg-[#2b2d31] cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center text-xs font-bold">
+            <div
+              className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center text-xs font-bold"
+              onClick={() => setSelectedUser(m)}
+            >
               {m.username?.[0] || "U"}
             </div>
             <div className="flex items-center gap-2">

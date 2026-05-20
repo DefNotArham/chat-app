@@ -14,6 +14,8 @@ import useAuthStore from "../../Stores/Auth.Store";
 import useServerStore from "../../Stores/Server.Store";
 import useChannelStore from "../../Stores/Channel.Store";
 
+import UserProfilePopup from "../../Components/general/UserProfilePopup";
+
 const ServerPage = () => {
   const { user } = useAuthStore();
   const {
@@ -44,6 +46,8 @@ const ServerPage = () => {
   const [channelPopup, setChannelPopup] = useState(false);
 
   const navigate = useNavigate();
+
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     if (serverId) {
@@ -146,9 +150,22 @@ const ServerPage = () => {
             <ShowMessages />
             <MessageInput />
           </div>
-          <ServerMembers />
+          <ServerMembers
+            selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+          />
         </div>
       )}
+
+      {/** User popup  */}
+
+      {selectedUser && (
+        <UserProfilePopup
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
+
       {/* Invite to Server popup */}
       <AnimatePresence>
         {inviteToServerPopUp && (
