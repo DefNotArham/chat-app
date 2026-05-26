@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import UserProfilePopup from "../general/UserProfilePopup.jsx";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const PrivateMessage = () => {
   const { user } = useAuthStore();
 
@@ -29,7 +31,7 @@ const PrivateMessage = () => {
     const fetchDm = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/dm/loadDmMessages/${friendId}`,
+          `${API_URL}/dm/loadDmMessages/${friendId}`,
           { withCredentials: true },
         );
 

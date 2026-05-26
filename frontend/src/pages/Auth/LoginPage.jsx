@@ -152,7 +152,10 @@ const LoginPage = () => {
 
           <div className="fixed bg-discord-success p-6 rounded-2xl top-10 z-50">
             <div className="flex items-center gap-3 text-lg font-semibold justify-center text-discord-deep">
-              <h1>Check your email to reset your password</h1>
+              <h1>
+                Check your <span className="text-red-500">Spam folder</span> to
+                reset your password
+              </h1>
               <IoCloseSharp
                 size={25}
                 className="cursor-pointer"
