@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const useFriendStore = create((set) => ({
   friends: [],
   friendRequests: [],
@@ -12,7 +14,7 @@ const useFriendStore = create((set) => ({
   addFriend: async (targetUsername) => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/friend/add-friend`,
+        `${API_URL}/friend/add-friend`,
         {
           targetUsername: targetUsername,
         },
@@ -46,10 +48,9 @@ const useFriendStore = create((set) => ({
 
   loadFriendRequests: async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/friend/get-friendRequests",
-        { withCredentials: true },
-      );
+      const response = await axios.get(`${API_URL}/friend/get-friendRequests`, {
+        withCredentials: true,
+      });
 
       if (response?.data?.success) {
         set({ friendRequests: response.data.friendRequests });
@@ -71,7 +72,7 @@ const useFriendStore = create((set) => ({
   acceptFriendReq: async (senderId) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/friend/accept-friend",
+        `${API_URL}/friend/accept-friend`,
         { senderId },
         { withCredentials: true },
       );
@@ -101,7 +102,7 @@ const useFriendStore = create((set) => ({
   declineFriendReq: async (senderId) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/friend/decline-friend",
+        `${API_URL}/friend/decline-friend`,
         { senderId },
         { withCredentials: true },
       );
@@ -126,10 +127,9 @@ const useFriendStore = create((set) => ({
 
   loadFriends: async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/friend/get-friends",
-        { withCredentials: true },
-      );
+      const response = await axios.get(`${API_URL}/friend/get-friends`, {
+        withCredentials: true,
+      });
 
       if (response?.data?.success) {
         set({ friends: response?.data?.friends });
@@ -150,13 +150,10 @@ const useFriendStore = create((set) => ({
 
   removeFriend: async (friendId) => {
     try {
-      const response = await axios.delete(
-        "http://localhost:8000/friend/remove-friend",
-        {
-          data: { friendId },
-          withCredentials: true,
-        },
-      );
+      const response = await axios.delete(`${API_URL}/friend/remove-friend`, {
+        data: { friendId },
+        withCredentials: true,
+      });
       if (response?.data?.success) {
         set((state) => ({
           friends: state.friends.filter((f) => f._id !== friendId),

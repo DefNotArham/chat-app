@@ -2,6 +2,8 @@ import { create } from "zustand";
 import axios from "axios";
 import useAuthStore from "./Auth.Store";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const useUserStore = create((set) => ({
   status: "online",
 
@@ -17,7 +19,7 @@ const useUserStore = create((set) => ({
   changeStatus: async (newStatus) => {
     try {
       await axios.patch(
-        "http://localhost:8000/user/change-status",
+        `${API_URL}/user/change-status`,
         { status: newStatus },
         { withCredentials: true },
       );
@@ -39,7 +41,7 @@ const useUserStore = create((set) => ({
     set({ displayNameLoading: true });
     try {
       const response = await axios.patch(
-        "http://localhost:8000/user/change-displayName",
+        `${API_URL}/user/change-displayName`,
         { newDisplayName },
         { withCredentials: true },
       );
@@ -72,7 +74,7 @@ const useUserStore = create((set) => ({
     set({ userNameLoading: true, editUsernameError: "", errorType: "" });
     try {
       const response = await axios.patch(
-        "http://localhost:8000/user/change-username",
+        `${API_URL}/user/change-username`,
         { newUsername },
         { withCredentials: true },
       );
@@ -97,7 +99,7 @@ const useUserStore = create((set) => ({
     set({ changePasswordLoading: true });
     try {
       const response = await axios.patch(
-        "http://localhost:8000/user/change-password",
+        `${API_URL}/user/change-password`,
         {
           currentPassword: currentPassword.trim(),
           newPassword: newPassword.trim(),

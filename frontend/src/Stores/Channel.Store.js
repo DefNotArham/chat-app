@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const useChannelStore = create((set) => ({
   channels: [],
   currentChannel: null,
@@ -15,7 +17,7 @@ const useChannelStore = create((set) => ({
   loadChannels: async (serverId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/server/channel/get-channels/${serverId}`,
+        `${API_URL}/server/channel/get-channels/${serverId}`,
         { withCredentials: true },
       );
 
@@ -32,7 +34,7 @@ const useChannelStore = create((set) => ({
     set({ loadingChannel: true, currentChannel: null });
     try {
       const response = await axios.get(
-        `http://localhost:8000/server/channel/load-channel/${serverId}/channel/${channelId}`,
+        `${API_URL}/server/channel/load-channel/${serverId}/channel/${channelId}`,
         { withCredentials: true },
       );
       if (response?.data?.success) {
@@ -47,11 +49,12 @@ const useChannelStore = create((set) => ({
       return { success: false };
     }
   },
+
   createChannel: async (serverId, newChannel) => {
     set({ loadingCreate: true, channelError: "", errorType: "" });
     try {
       const response = await axios.post(
-        `http://localhost:8000/server/channel/create-channel/${serverId}`,
+        `${API_URL}/server/channel/create-channel/${serverId}`,
         { channelName: newChannel.trim() },
         { withCredentials: true },
       );
@@ -84,7 +87,7 @@ const useChannelStore = create((set) => ({
     set({ loadingEditChannelName: true, channelError: "", errorType: "" });
     try {
       const response = await axios.patch(
-        `http://localhost:8000/server/channel/edit-channelName/${serverId}/channel/${channelId}`,
+        `${API_URL}/server/channel/edit-channelName/${serverId}/channel/${channelId}`,
         { newChannelName: channelName },
         { withCredentials: true },
       );
@@ -111,7 +114,7 @@ const useChannelStore = create((set) => ({
   deleteChannel: async (serverId, channelId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/server/channel/delete-channel/${serverId}/channel/${channelId}`,
+        `${API_URL}/server/channel/delete-channel/${serverId}/channel/${channelId}`,
         { withCredentials: true },
       );
 

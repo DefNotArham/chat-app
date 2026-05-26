@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const useServerStore = create((set) => ({
   // Server
   servers: [],
@@ -23,10 +25,9 @@ const useServerStore = create((set) => ({
   loadServers: async () => {
     set({ loading: true });
     try {
-      const response = await axios.get(
-        "http://localhost:8000/server/get-servers",
-        { withCredentials: true },
-      );
+      const response = await axios.get(`${API_URL}/server/get-servers`, {
+        withCredentials: true,
+      });
       set({ servers: response.data.servers, loading: false });
     } catch (error) {
       console.log(error);
@@ -38,7 +39,7 @@ const useServerStore = create((set) => ({
     set({ loadingMembers: true });
     try {
       const response = await axios.get(
-        `http://localhost:8000/server/get-members/${serverId}`,
+        `${API_URL}/server/get-members/${serverId}`,
         { withCredentials: true },
       );
       console.log(response.data);
@@ -59,7 +60,7 @@ const useServerStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.post(
-        "http://localhost:8000/server/create-server",
+        `${API_URL}/server/create-server`,
         { name: serverName.trim() },
         { withCredentials: true },
       );
@@ -89,7 +90,7 @@ const useServerStore = create((set) => ({
   joinServer: async (inviteCode) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/server/join-server",
+        `${API_URL}/server/join-server`,
         { inviteCode: inviteCode.trim() },
         { withCredentials: true },
       );
@@ -119,7 +120,7 @@ const useServerStore = create((set) => ({
   loadCurrentServer: async (serverId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/server/load-server/${serverId}`,
+        `${API_URL}/server/load-server/${serverId}`,
         { withCredentials: true },
       );
 
@@ -134,7 +135,7 @@ const useServerStore = create((set) => ({
   leaveServer: async (serverId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/server/leave-server/${serverId}`,
+        `${API_URL}/server/leave-server/${serverId}`,
         {},
         { withCredentials: true },
       );
@@ -165,7 +166,7 @@ const useServerStore = create((set) => ({
     set({ loadingEditServerName: true });
     try {
       const response = await axios.patch(
-        `http://localhost:8000/server/editServername/${serverId}`,
+        `${API_URL}/server/editServername/${serverId}`,
         { newServerName },
         { withCredentials: true },
       );
@@ -199,7 +200,7 @@ const useServerStore = create((set) => ({
     set({ loadingDeleteServer: true });
     try {
       const response = await axios.delete(
-        `http://localhost:8000/server/delete-server/${serverId}`,
+        `${API_URL}/server/delete-server/${serverId}`,
         {
           data: { serverName: serverName },
           withCredentials: true,

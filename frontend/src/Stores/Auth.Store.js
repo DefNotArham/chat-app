@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const useAuthStore = create((set) => ({
   user: null,
   isAuthenticated: false,
@@ -12,7 +14,7 @@ const useAuthStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/register",
+        `${API_URL}/auth/register`,
         {
           email: email.trim(),
           username: username.trim(),
@@ -55,7 +57,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/verifyEmail",
+        `${API_URL}/auth/verifyEmail`,
         { code: code.trim() },
         { withCredentials: true },
       );
@@ -85,7 +87,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/login",
+        `${API_URL}/auth/login`,
         {
           email: email.trim(),
           password,
@@ -125,7 +127,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/forgot-password",
+        `${API_URL}/auth/forgot-password`,
         { email: email.trim() },
         { withCredentials: true },
       );
@@ -153,7 +155,7 @@ const useAuthStore = create((set) => ({
   loadServer: async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/checkAuth",
+        `${API_URL}/auth/checkAuth`,
         {},
         { withCredentials: true },
       );
@@ -180,7 +182,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/auth/reset-password/${token}`,
+        `${API_URL}/auth/reset-password/${token}`,
         {
           password: password.trim(),
           confirmPassword: confirmPassword.trim(),
@@ -213,7 +215,7 @@ const useAuthStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/checkAuth",
+        `${API_URL}/auth/checkAuth`,
         {},
         { withCredentials: true },
       );
@@ -244,11 +246,7 @@ const useAuthStore = create((set) => ({
   logoutUser: async () => {
     set({ loading: true });
     try {
-      await axios.post(
-        "http://localhost:8000/auth/logout",
-        {},
-        { withCredentials: true },
-      );
+      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
 
       set({
         user: null,
@@ -272,13 +270,11 @@ const useAuthStore = create((set) => ({
   deleteAccount: async (deleteAccPassword) => {
     set({ loading: true });
     try {
-      const response = await axios.delete(
-        "http://localhost:8000/user/delete-account",
-        {
-          data: { password: deleteAccPassword },
-          withCredentials: true,
-        },
-      );
+      const response = await axios.delete(`${API_URL}/user/delete-account`, {
+        data: { password: deleteAccPassword },
+        withCredentials: true,
+      });
+
       if (response?.data?.success) {
         set({ loading: false, isAuthenticated: false });
         return { success: true };
