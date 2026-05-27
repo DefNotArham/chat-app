@@ -43,7 +43,8 @@ Create servers, join channels, and chat with friends in real time!
 
 ## 🌐 Live Links
 
-- Demo: [https://chatapp-frontend-370989099362.us-central1.run.app/login](https://chatapp-frontend-370989099362.us-central1.run.app/login)  
+- Demo: [https://chatapp-frontend-370989099362.us-central1.run.app/login](https://chatapp-frontend-370989099362.us-central1.run.app/login)
+- Video: [https://drive.google.com/file/d/1b6DWkD-Y427OBxNwktcmxRiqd39F_FTa/view?usp=sharing](https://drive.google.com/file/d/1b6DWkD-Y427OBxNwktcmxRiqd39F_FTa/view?usp=sharing)
 
 ---
 
