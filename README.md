@@ -13,7 +13,6 @@ Create servers, join channels, and chat with friends in real time!
     📢 Channel-based chat system
     👥 Direct messaging (DMs)
     🔐 Protected routes with JWT cookies
-    ⚡ Live updates without refresh
 
 ---
 
