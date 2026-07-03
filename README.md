@@ -1,4 +1,4 @@
-# 💬 Discord Clone (MERN Stack)
+# 💬 Chatapp (MERN Stack)
 
 A **real-time chat application** inspired by Discord, built using the **MERN stack + Socket.IO**.  
 Create servers, join channels, and chat with friends in real time!
