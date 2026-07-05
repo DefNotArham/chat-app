@@ -47,6 +47,31 @@ Create servers, join channels, and chat with friends in real time!
 
 ---
 
+## Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/yourusername/chatapp.git
+cd chatapp
+```
+
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
 
 ## 📁 Project Structure
 
