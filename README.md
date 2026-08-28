@@ -1,49 +1,53 @@
-# 💬 Chatapp (MERN Stack)
+# Chatapp (MERN Stack)
 
-A **real-time chat application** inspired by Discord, built using the **MERN stack + Socket.IO**.  
+A **real-time chat application** inspired by Discord, built using the **MERN stack + Socket.IO**.
 Create servers, join channels, and chat with friends in real time!
 
 ---
 
-## 🚀 Features
+## Features
 
-    💬 Real-time messaging (Socket.IO)
-    🧑 User authentication (login / register)
-    🏠 Create & join servers
-    📢 Channel-based chat system
-    👥 Direct messaging (DMs)
-    🔐 Protected routes with JWT cookies
-
----
-
-## 🛠️ Tech Stack
-
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+```
+Real-time messaging (Socket.IO)
+User authentication (login / register)
+Create & join servers
+Channel-based chat system
+Direct messaging (DMs)
+Protected routes with JWT cookies
+```
 
 ---
 
-## ⚙️ How It Works
+## Tech Stack
 
-    🧑 Sign up / log in
-    🏠 Create or join a server
-    💬 Enter a channel or DM
-    ⚡ Send messages in real time
-    🔄 Everything updates instantly using WebSockets
-    More...
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge\&logo=react\&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge\&logo=tailwind-css\&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge\&logo=javascript\&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge\&logo=node.js\&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge\&logo=express\&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge\&logo=mongodb\&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge\&logo=socket.io\&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge\&logo=axios\&logoColor=white)
 
 ---
 
-## 🌐 Live Links
+## How It Works
 
-- Demo: [https://chatapp-frontend-370989099362.us-central1.run.app/login](https://chatapp-frontend-370989099362.us-central1.run.app/login)
-- Video: [https://drive.google.com/file/d/1b6DWkD-Y427OBxNwktcmxRiqd39F_FTa/view?usp=sharing](https://drive.google.com/file/d/1b6DWkD-Y427OBxNwktcmxRiqd39F_FTa/view?usp=sharing)
+```
+Sign up / log in
+Create or join a server
+Enter a channel or DM
+Send messages in real time
+Everything updates instantly using WebSockets
+More...
+```
+
+---
+
+## Live Links
+
+* Demo: https://chatapp-frontend-370989099362.us-central1.run.app/login
+* Video: https://drive.google.com/file/d/1b6DWkD-Y427OBxNwktcmxRiqd39F_FTa/view?usp=sharing
 
 ---
 
@@ -72,9 +76,9 @@ npm install
 npm run dev
 ```
 
-
-## 📁 Project Structure
+## Project Structure
 
 ```txt
 frontend/
 backend/
+```
